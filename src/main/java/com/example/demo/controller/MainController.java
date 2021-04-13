@@ -1,12 +1,16 @@
-package com.example.demo;
+package com.example.demo.controller;
 
+import com.example.demo.models.entity.Users;
+import com.example.demo.models.repository.UsersRepository;
+import com.example.demo.service.UsersService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 public class MainController {
+
+    private UsersRepository ur;
 
     @GetMapping("/")
     public String home(Model model) {
@@ -19,9 +23,9 @@ public class MainController {
         return "SteamAuthRedirect";
     }
 
-    @GetMapping("/test")
-    public String ttest(Model model) {
-        return "test";
-    }
+
+
+
+
 
 }
