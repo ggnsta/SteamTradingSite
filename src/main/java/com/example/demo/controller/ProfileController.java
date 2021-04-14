@@ -24,10 +24,9 @@ public class ProfileController {
     @GetMapping("/profile-info")
     public String profile (Principal principal, Model model)
     {
-        if (principal!=null)
-        {
-            System.out.println("222222"+principal);
-            System.out.println(principal.getName());
+
+            System.out.println("principal:"+principal);
+            System.out.println("principal_getname:"+principal.getName());
             String openId = principal.getName();
             Users users;
             Optional<Users> usersOptional = usersRepository.findById(openId);
@@ -38,10 +37,6 @@ public class ProfileController {
             model.addAttribute("name", users.getName());
 
             return "profile-info";
-        }
-        else {
-            System.out.println("huiiiii");
-            return "home";
-        }
+
     }
 }

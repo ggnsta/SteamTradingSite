@@ -15,16 +15,11 @@ public class SecuirtyWebConfiguration extends WebSecurityConfigurerAdapter {
 
         http
                 .authorizeRequests()
-                .antMatchers("/").permitAll()
-                .antMatchers("/chat/**", "/dialogs/**", "/group/**", "/groups/**").permitAll()
-                .antMatchers("/js/**", "/img/**", "/fonts/**","/css/**", "/bower_components/**").permitAll()
-                .antMatchers("/api/**").permitAll()
+                .antMatchers("/**").permitAll()
                 .antMatchers(HttpMethod.POST, "/api/**").permitAll()
-                .antMatchers("/login/**").permitAll()
-                .antMatchers("/resources/**", "/webjars/**", "/built/**", "/static/**").permitAll()
                 .and()
                 .openidLogin()
-                .loginPage("/").permitAll()
+                .loginPage("/profile-info").permitAll()
                 .authenticationUserDetailsService(authenticationUserDetailsService())
                 .failureUrl("/?fail")
                 .and()

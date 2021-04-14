@@ -10,6 +10,7 @@ import org.springframework.security.openid.OpenIDAuthenticationToken;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
+import java.util.SortedSet;
 
 @Service
 public class CustomUserDetailsService implements AuthenticationUserDetailsService<OpenIDAuthenticationToken> {
@@ -20,6 +21,7 @@ public class CustomUserDetailsService implements AuthenticationUserDetailsServic
         this.usersRepository = UsersRepository;
     }
 
+
     @Override
     public UserDetails loadUserDetails(OpenIDAuthenticationToken token) throws UsernameNotFoundException {
         Users users;
@@ -27,12 +29,15 @@ public class CustomUserDetailsService implements AuthenticationUserDetailsServic
             Optional<Users> usersOptional = usersRepository.findById(token.getName());
             if (usersOptional.isPresent()) users = usersOptional.get();
             else users = null;
+            System.out.println("old user");
             if (users != null) return users;
             throw new UsernameNotFoundException("Users is not found");
         } catch (RuntimeException e) {
+            System.out.println("new user");
             users = new Users();
             users.setId(token.getName());
             return usersRepository.save(users);
+
         }
     }
 }

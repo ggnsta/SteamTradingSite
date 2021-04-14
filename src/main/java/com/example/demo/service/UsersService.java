@@ -26,7 +26,7 @@ public class UsersService {
         List<String> userInfo = new ArrayList<>();
         String openID = getOpenId(users);
         try{
-            String userUrl = "http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=2429CE303C334BC5765DD2FC1B56C836=" + openID;
+            String userUrl = "http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=6DB0B555FA0F62FD7622E385682AADB2&steamids=" + openID;
             String gameString = new HTTPClientGame(userUrl).getAll();
             userInfo = new MyJsonParser().parseUserInfoList(gameString);
         }catch (Exception e)

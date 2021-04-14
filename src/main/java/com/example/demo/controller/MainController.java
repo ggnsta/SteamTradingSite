@@ -18,9 +18,9 @@ public class MainController {
         return "home";
     }
 
-    @GetMapping("/SteamAuthRedirect")
+    @GetMapping("/about")
     public String stemAuthRedirect(Model model) {
-        return "SteamAuthRedirect";
+        return "about";
     }
 
 
