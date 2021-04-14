@@ -1,0 +1,57 @@
+*{padding: 0; margin: 0; box-sizing: border-box;}
+
+#header {
+  height: 100px;
+  background-color: #3f4045;
+  background-size: cover;
+  background-attachment: fixed;
+  position: relative;
+  overflow: shown;
+}
+#subheader{
+  height: 25px;
+  background-color: #3f4045;
+  background-size: cover;
+  background-attachment: fixed;
+  position: relative;
+  overflow: shown;
+  }
+#tagline{
+  color: #FFF;
+  font-family: Helvetica;
+  font-size: 20px;
+  text-shadow: 1px 1px 1px black;
+        float: left;
+}
+#subheader_right{
+float:right;
+}
+body{
+height: 900px;
+  alignment: left;
+  background-color: lightblue;
+}
+
+
+p{
+  font-size: 12px;
+  padding-top: 5px;
+}
+
+#logo {
+  color: #FFF;
+  font-family: Helvetica, sans-serif;
+  font-size: 80px;
+  float: left;
+}
+
+#header-middle {
+
+
+}
+
+#header-right {
+margin-right:15px;
+margin-top: 25px;
+    float: right;
+}

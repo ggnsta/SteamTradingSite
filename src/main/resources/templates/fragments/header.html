@@ -1,0 +1,38 @@
+<header th:fragment="header" xmlns:th="http://www.thymeleaf.org"
+        xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+
+    <div class="header-content">
+
+        <div class="logo"><a href="#"><img src="#" th:src="@{/img/gamehub_logo_straight.png}" alt="GameHub logo"/></a>
+        </div>
+
+        <div class="header-nav">
+
+            <nav sec:authorize="isAuthenticated()">
+
+                <ul class="primary-nav">
+                    <li><a href="#" th:href="@{/groups}">Groups</a></li>
+                    <li><a href="#" th:href="@{/search/users}">Players</a></li>
+                    <li><a href="#">Contact Us</a></li>
+                </ul>
+
+
+                <nav sec:authorize="isAnonymous()">
+                    <ul class="member-actions">
+                        <form name="form" th:action="@{/login/openid}" method="post">
+
+                            <div id="openid_input_area">
+                                <input id="openid_identifier" name="openid_identifier" type="hidden"
+                                       value="http://steamcommunity.com/openid"/>
+                                <input id="openid_submit" type="image" th:src="@{/globalheader_logo.png}"/>
+                            </div>
+
+                        </form>
+                    </ul>
+                </nav>
+
+        </div>
+
+    </div>
+
+</header>

@@ -1,0 +1,226 @@
+*{padding: 0; margin: 0; box-sizing: border-box;}
+body{height: 900px;
+background-color: lightblue}
+header {
+  text-align: center;
+  width: 100%;
+  height: auto;
+  background-size: cover;
+  background-attachment: fixed;
+  position: relative;
+  overflow: hidden;
+  border-radius: 0 0 85% 85% / 30%;
+}
+header .overlay{
+  width: 100%;
+  height: 100%;
+  padding: 50px;
+  color: #FFF;
+  text-shadow: 1px 1px 1px #333;
+  background-image: linear-gradient( 135deg, #47474B 10%, #47474B 100%);
+
+}
+
+header .body{
+  alignment: left;
+  background-color: darkblue;
+}
+h2 {
+  font-family: Helvetica;
+
+  font-size: 30px;
+  text-shadow: 1px 1px 1px white;
+}
+
+h1 {
+  font-family: Helvetica, cursive;
+  font-size: 80px;
+  margin-bottom: 30px;
+}
+
+h3{
+  font-family: Helvetica, sans-serif;
+  margin-bottom: 30px;
+}
+
+
+/* relevant styles */
+.img__wrap {
+  position: relative;
+  height: 100px;
+  width: 100px;
+}
+
+.img__description_layer {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(36, 62, 206, 0.6);
+  color: #fff;
+  visibility: hidden;
+  opacity: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  /* transition effect. not necessary */
+  transition: opacity .2s, visibility .2s;
+}
+
+{
+box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Float four columns side by side */
+.column {
+  float: left;
+  width: 25%;
+  padding: 10px 10px;
+
+}
+
+/* Remove extra left and right margins, due to padding in columns */
+.row {
+  margin: 0 -5px;
+  height: 1000px;
+  width: 500px;
+  overflow: auto
+}
+
+/* Clear floats after the columns */
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+/* Style the counter cards */
+.card {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2); /* this adds the "card" effect */
+  padding: 16px;
+  text-align: center;
+  background-color: #f1f1f1;
+  height: 210px;
+  width: auto;
+}
+
+.card:hover{
+  box-shadow: 1px 8px 20px grey;
+  -webkit-transition:  box-shadow .6s ease-in;
+  transform: translate3d(0px, -1px, 0px);
+}
+
+/* Responsive columns - one column layout (vertical) on small screens */
+@media screen and (max-width: 600px) {
+  .column {
+    width: 100%;
+    display: block;
+    margin-bottom: 20px;
+  }
+}
+
+p {
+  font-family: 'Raleway', sans-serif;
+  text-transform: uppercase;
+  font-size: 10px;
+  letter-spacing: 1px;
+  font-weight: 500;
+  color: #868686;
+}
+
+.center {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 50%;
+}
+
+.btn-group button {
+  background-color: whitesmoke; /* Green background */
+  border: 1px solid darkslategray; /* Green border */
+  color: white; /* White text */
+  padding: 10px 16px; /* Some padding */
+  cursor: pointer; /* Pointer/hand icon */
+  /* Float the buttons side by side */
+}
+
+.btn-group button:not(:last-child) {
+  border-right: none; /* Prevent double borders */
+}
+
+/* Clear floats (clearfix hack) */
+.btn-group:after {
+  content: "";
+  clear: both;
+  display: table;
+}
+
+/* Add a background color on hover */
+.btn-group button:hover {
+  background-color: gainsboro;
+}
+
+.header img {
+  width: 60px;
+  height: 60px;
+  padding-right: 10px;
+}
+
+.header h1 {
+  display: inline-block;
+}
+
+input[type=search] {
+  border: solid 3px #fff;
+  box-sizing: border-box;
+  font-size: 2em;
+  height: 2em;
+  margin-left: -15vw;
+  outline: solid #fc0 0;
+  padding: .5em;
+  transition: all 2s ease-in;
+  width: 30vw;
+  z-index: 1;
+  float: left;
+}
+
+.forBody {
+  alignment: center;
+}
+
+.myInventory {
+  float: left;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 50%;
+  padding-left: 10px;
+}
+
+.allInventory{
+  float: right;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 50%;
+  padding-left: 20px;
+}
+
+.all {
+  width: 100%;
+}
+
+

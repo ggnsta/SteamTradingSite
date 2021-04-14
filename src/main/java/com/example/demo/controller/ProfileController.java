@@ -4,6 +4,8 @@ import com.example.demo.models.entity.Users;
 import com.example.demo.models.repository.UsersRepository;
 import com.example.demo.service.UsersService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
@@ -20,6 +22,7 @@ public class ProfileController {
     public ProfileController(UsersRepository usersRepository) {
         this.usersRepository = usersRepository;
     }
+
 
     @GetMapping("/profile-info")
     public String profile (Principal principal, Model model)
