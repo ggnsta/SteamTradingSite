@@ -11,7 +11,7 @@ import java.util.List;
 public class MyJsonParser {
     private JsonParser parser;
     public List<String> parseUserInfoList(String stringToParse) {
-        parser = new JsonParser();
+        parser= new JsonParser();
         JsonElement jsonTree = parser.parse(stringToParse);
         JsonObject obj = jsonTree.getAsJsonObject();
         obj = obj.getAsJsonObject("response");
@@ -21,6 +21,8 @@ public class MyJsonParser {
         List<String> userInfo = new ArrayList<>();
         userInfo.add(obj.get("personaname").getAsString());
         userInfo.add(obj.get("avatar").getAsString());
+        userInfo.add(obj.get("avatarmedium").getAsString());
+        userInfo.add(obj.get("avatarfull").getAsString());
 
         return userInfo;
     }

@@ -5,6 +5,7 @@ import com.example.demo.models.entity.Users;
 import com.example.demo.models.repository.UsersRepository;
 import com.example.demo.utls.HTTPClientGame;
 import com.example.demo.utls.MyJsonParser;
+import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -35,6 +36,21 @@ public class UsersService {
         }
         return userInfo;
     }
+    public List<String> getSteamUserNameAndAvatarsUrl(Users users)
+    {
+        List<String> userInfo = new ArrayList<>();
+        String openID = getOpenId(users);
+        Gson gson = new Gson();
+        try{
+            String userUrl = "http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=6DB0B555FA0F62FD7622E385682AADB2&steamids=" + openID;
+            String gameString = new HTTPClientGame(userUrl).getAll();
+
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        return userInfo;
+    }
 
     private String getOpenId(Users users) {
         //возможно тут надо было через реп
@@ -46,7 +62,9 @@ public class UsersService {
     public Users findSteamInfo(Users users) {
         List<String> userInfo =  getSteamUserNameAndAvatarUrl(users);
         users.setName(userInfo.get(0));
-        users.setAvatarUrl(userInfo.get(1));
+        users.setSmallAvatarUrl(userInfo.get(1));
+        users.setMediumAvatarUrl(userInfo.get(2));
+        users.setFullAvatarUrl(userInfo.get(3));
 
         return users;
     }

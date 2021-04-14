@@ -15,7 +15,9 @@ public class Users implements UserDetails {
     private String name;
     private float balance;
     private String tradeUrl;
-    private String avatarUrl;
+    private String smallAvatarUrl;
+    private String mediumAvatarUrl;
+    private String fullAvatarUrl;
     private LocalDateTime joinDateTime;
 
 
@@ -32,12 +34,12 @@ public class Users implements UserDetails {
         this.tradeUrl = tradeUrl;
     }
 
-    public String getAvatarUrl() {
-        return avatarUrl;
+    public String getFullAvatarUrl() {
+        return fullAvatarUrl;
     }
 
-    public void setAvatarUrl(String avatarUrl) {
-        this.avatarUrl = avatarUrl;
+    public void setFullAvatarUrl(String fullAvatarUrl) {
+        this.fullAvatarUrl = fullAvatarUrl;
     }
 
     public LocalDateTime getJoinDateTime() {
@@ -49,6 +51,7 @@ public class Users implements UserDetails {
     }
 
     public Users() {
+        this.joinDateTime= LocalDateTime.now();
     }
 
     public void setId(String id) {
@@ -69,6 +72,23 @@ public class Users implements UserDetails {
 
     public void setBalance(float balance) {
         this.balance = balance;
+    }
+
+
+    public String getSmallAvatarUrl() {
+        return smallAvatarUrl;
+    }
+
+    public void setSmallAvatarUrl(String smallAvatarUrl) {
+        this.smallAvatarUrl = smallAvatarUrl;
+    }
+
+    public String getMediumAvatarUrl() {
+        return mediumAvatarUrl;
+    }
+
+    public void setMediumAvatarUrl(String mediumAvatarUrl) {
+        this.mediumAvatarUrl = mediumAvatarUrl;
     }
 
     @Override
