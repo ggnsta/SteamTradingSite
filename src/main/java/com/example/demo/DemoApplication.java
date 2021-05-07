@@ -7,7 +7,13 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class DemoApplication {
 
     public static void main(String[] args) {
+        TradeBot tb = new TradeBot();
+
         SpringApplication.run(DemoApplication.class, args);
+        tb.run();
     }
+
+
+
 
 }
