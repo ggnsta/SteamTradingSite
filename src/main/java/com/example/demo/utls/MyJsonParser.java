@@ -9,7 +9,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MyJsonParser {
+
     private JsonParser parser;
+
     public List<String> parseUserInfoList(String stringToParse) {
         parser= new JsonParser();
         JsonElement jsonTree = parser.parse(stringToParse);

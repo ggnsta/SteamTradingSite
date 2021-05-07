@@ -7,9 +7,10 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import java.time.LocalDateTime;
 import java.util.Collection;
+import javax.persistence.Table;
 
 @Entity
-public class Users implements UserDetails {
+public class UsersProfile implements UserDetails {
     @Id
     private String id;
     private String name;
@@ -19,6 +20,7 @@ public class Users implements UserDetails {
     private String mediumAvatarUrl;
     private String fullAvatarUrl;
     private LocalDateTime joinDateTime;
+
 
 
 
@@ -50,7 +52,7 @@ public class Users implements UserDetails {
         this.joinDateTime = joinDateTime;
     }
 
-    public Users() {
+    public UsersProfile() {
         this.joinDateTime= LocalDateTime.now();
     }
 

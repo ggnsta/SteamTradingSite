@@ -17,10 +17,11 @@ public class HTTPClientGame {
     private Header contentTypeHeader;
     private String URI;
 
-    public HTTPClientGame(String URI) {
+    public HTTPClientGame(String URL) {
         contentTypeHeader = new BasicHeader("Content-Type", "application/json; charset=UTF-8");
         client = HttpClientBuilder.create().build();
-        this.URI = URI;
+        this.URI = URL;
+
     }
 
     //EXCEP SLOVIT
@@ -38,7 +39,7 @@ public class HTTPClientGame {
 
         } catch (IOException e) {
             //throw new ServerException(e.getMessage(), e, 500);
-           return "0";
+            return "0";
         }
     }
 
@@ -64,18 +65,20 @@ public class HTTPClientGame {
         return total.toString();
     }
 
+
+
     private void throwServerException(HttpResponse response, int goodCode)  {
         if (response.getStatusLine().getStatusCode() == goodCode) return;
 
         switch (response.getStatusLine().getStatusCode()) {
             case 404:
-               // throw new ServerException("Item wasn't found!", 404);
+                // throw new ServerException("Item wasn't found!", 404);
             case 204:
-               // throw new ServerException("There is no content", 204);
+                // throw new ServerException("There is no content", 204);
             case 409:
-             //   throw new ServerException("The item already exists", 409);
+                //   throw new ServerException("The item already exists", 409);
             default:
-              //  throw new ServerException("Server error occurred!", response.getStatusLine().getStatusCode());
+                //  throw new ServerException("Server error occurred!", response.getStatusLine().getStatusCode());
         }
     }
 
