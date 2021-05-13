@@ -1,9 +1,13 @@
 package com.example.demo.controller;
 
+import com.example.demo.Bot.BotLogin;
+import com.example.demo.models.entity.BotDetails;
 import com.example.demo.models.entity.Skins;
 import com.example.demo.models.entity.UsersProfile;
+import com.example.demo.models.repository.BotDetailsRepository;
 import com.example.demo.models.repository.UsersRepository;
 import com.example.demo.service.InventoryService;
+import com.example.demo.service.TradeService;
 import com.example.demo.service.UsersService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
@@ -28,12 +32,37 @@ public class MainController {
     private UsersRepository userRepository;
     @Autowired
     private InventoryService inventoryService;
+    @Autowired
+    private UsersService usersService;
+    @Autowired
+    private TradeService tradeService;
 
+    @RequestMapping ("/Trades")
+    public  String trades (Model model) throws IOException {
+        tradeService.hello();
+        return "Trades";
+    }
 
-    @RequestMapping("/")
-    public String getHomePage() {
+    @RequestMapping("/welcome")
+    public String profile(Model model) {
+
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        return "index";
+        if ((!(authentication  instanceof AnonymousAuthenticationToken)) && authentication  != null) {
+            UserDetails userDetail = (UserDetails) authentication .getPrincipal();
+
+            if (userDetail != null) {
+                String openIdUrl = ((UsersProfile) authentication .getPrincipal()).getId();
+                Optional<UsersProfile> usersOptional = userRepository.findById(openIdUrl);
+                UsersProfile user;
+                user=usersOptional.orElse(usersOptional.get());
+                usersService.updateSteamInfo(user);
+                System.out.println(user.getName());
+                model.addAttribute("username", user.getName());
+            } else {
+                model.addAttribute("username", "");
+            }
+        }
+        return "welcome";
     }
 
     @RequestMapping("/profile-info")
@@ -50,26 +79,4 @@ public class MainController {
 
 
 
-    @RequestMapping("/welcome")
-    public String profile(Model model) {
-
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if ((!(authentication  instanceof AnonymousAuthenticationToken)) && authentication  != null) {
-            UserDetails userDetail = (UserDetails) authentication .getPrincipal();
-
-            if (userDetail != null) {
-                String openIdUrl = ((UsersProfile) authentication .getPrincipal()).getId();
-                Optional<UsersProfile> usersOptional = userRepository.findById(openIdUrl);
-                UsersProfile user;
-                user=usersOptional.orElse(usersOptional.get());
-                UsersService usersService = new UsersService(userRepository);
-                usersService.updateSteamInfo(user);
-                System.out.println(user.getName());
-                model.addAttribute("username", user.getName());
-            } else {
-                model.addAttribute("username", "");
-            }
-        }
-        return "welcome";
-    }
 }

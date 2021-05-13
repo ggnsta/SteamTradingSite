@@ -22,8 +22,6 @@ public class UsersProfile implements UserDetails {
     private LocalDateTime joinDateTime;
 
 
-
-
     public String getId() {
         return id;
     }

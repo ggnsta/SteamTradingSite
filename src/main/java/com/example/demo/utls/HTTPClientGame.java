@@ -4,6 +4,10 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.URI;
+import java.net.http.HttpRequest;
+import java.util.Map;
+
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -15,12 +19,12 @@ import org.apache.http.message.BasicHeader;
 public class HTTPClientGame {
     private HttpClient client;
     private Header contentTypeHeader;
-    private String URI;
+    private String URIl;
 
     public HTTPClientGame(String URL) {
         contentTypeHeader = new BasicHeader("Content-Type", "application/json; charset=UTF-8");
         client = HttpClientBuilder.create().build();
-        this.URI = URL;
+        this.URIl = URL;
 
     }
 
@@ -28,7 +32,7 @@ public class HTTPClientGame {
     public String getAll()  {
         try {
             client = HttpClientBuilder.create().build();
-            HttpGet get = new HttpGet(URI);
+            HttpGet get = new HttpGet(URIl);
             get.addHeader(contentTypeHeader);
 
             HttpResponse response = client.execute(get);
@@ -42,7 +46,6 @@ public class HTTPClientGame {
             return "0";
         }
     }
-
 
     private String inputStreamToString(InputStream is) {
 
@@ -65,6 +68,34 @@ public class HTTPClientGame {
         return total.toString();
     }
 
+    public static HttpRequest build(String url, Map<String, String> headers, RequestType requestType, String body) {
+
+        HttpRequest.Builder request = HttpRequest.newBuilder();
+
+        request.uri(URI.create(url));
+
+        for (String header : headers.keySet()) {
+            request.header(header, headers.get(header));
+        }
+
+        switch (requestType) {
+            case GET:
+                request.GET();
+                break;
+            case POST:
+                if (body != null) {
+                    request.POST(HttpRequest.BodyPublishers.ofString(body));
+                } else request.POST(HttpRequest.BodyPublishers.noBody());
+                break;
+        }
+
+        return request.build();
+    }
+
+    public enum RequestType {
+        GET,
+        POST,
+    }
 
 
     private void throwServerException(HttpResponse response, int goodCode)  {

@@ -21,7 +21,7 @@ public class UsersService {
     @Autowired
     public UsersService(UsersRepository usersRepository) {
         this.usersRepository = usersRepository;
-    }
+    } /// может просто заавтоварить?
 
     public List<String> getSteamUserNameAndAvatarUrl(UsersProfile users)
     {

@@ -1,5 +1,6 @@
 package com.example.demo.service;
 import com.example.demo.GeneralAPI;
+import com.example.demo.TradeBot;
 import com.example.demo.models.entity.Skins;
 import com.example.demo.models.entity.UsersProfile;
 import com.example.demo.models.repository.SkinsRepository;
@@ -127,6 +128,8 @@ public class InventoryService {
                 }
             }
         }
+        TradeBot tb = new TradeBot();
+        tb.makeTradeoffer(user.getId(),existSkins,actualSkins,"hui");
 
     }
 

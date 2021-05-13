@@ -28,4 +28,13 @@ public class MyJsonParser {
 
         return userInfo;
     }
+
+    public static JsonObject  parseTimeAligner (String stringToParse)
+    {
+        JsonParser parser= new JsonParser();
+        JsonElement jsonTree = parser.parse(stringToParse);
+        JsonObject obj = jsonTree.getAsJsonObject();
+        obj = obj.getAsJsonObject("response");
+        return obj;
+    }
 }
