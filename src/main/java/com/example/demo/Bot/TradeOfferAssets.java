@@ -12,31 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 
 public class TradeOfferAssets {
-    private class CEconTradeStatus {
 
-        @SerializedName("newversion")
-        private boolean newVersion;
-
-        @SerializedName("version")
-        private long version;
-
-        @SerializedName("me")
-        private CEconTradePartipiant me;
-
-        @SerializedName("them")
-        private CEconTradePartipiant them;
-
-    }
-
-    private class CEconTradePartipiant {
-
-        @SerializedName("ready")
-        private boolean ready;
-
-        @SerializedName("assets")
-        private List<Skins> assets;
-
-    }
 
     private static class OnlySkinsAssets
     {
@@ -53,31 +29,18 @@ public class TradeOfferAssets {
         }
     }
 
-    public   CEconTradeStatus  doShit (List<Skins> bot,List<Skins> user)
+    public static JsonObject  doShit (List<Skins> bot,List<Skins> user)
     {
 
-       // JsonObject jsonTradeOffer = new JsonObject();
-        //jsonTradeOffer.addProperty("newversion" ,true);
-       // jsonTradeOffer.addProperty("version",1);
-       // jsonTradeOffer.add("me",makePartOfAssets(bot));
-      //  jsonTradeOffer.add("them",makePartOfAssets(user));
-        //jsonTradeOffer.add("me",dogoodShit(bot));
-      //  jsonTradeOffer.add("them",dogoodShit(user));
-        CEconTradePartipiant me = new CEconTradePartipiant();
-        me.ready = false;
-        me.assets = bot;
-        CEconTradePartipiant partner = new CEconTradePartipiant();
-        partner.ready = false;
-        partner.assets = user;
-
-        CEconTradeStatus tradeStatus = new CEconTradeStatus();
-        tradeStatus.newVersion = true;
-        tradeStatus.version = 1;
-        tradeStatus.me = me;
-        tradeStatus.them = partner;
+        JsonObject jsonTradeOffer = new JsonObject();
+        jsonTradeOffer.addProperty("newversion" ,true);
+        jsonTradeOffer.addProperty("version",2);
+        jsonTradeOffer.add("me",dogoodShit(bot));
+        jsonTradeOffer.add("them",dogoodShit(user));
 
 
-        return tradeStatus;
+
+        return jsonTradeOffer;
     }
 
     public static JsonObject dogoodShit(List<Skins> skin)
@@ -85,18 +48,19 @@ public class TradeOfferAssets {
         if (skin!=null) {
 
             JsonObject user = new JsonObject();
-            user.addProperty("ready", false);
-            user.add("currency", new JsonArray());
             JsonArray array = new JsonArray();
             for (int i = 0; i < skin.size(); i++) {
                 JsonObject obj = new JsonObject();
-                obj.addProperty("appid", "530");
-                obj.addProperty("contexid", "2");
-                obj.addProperty("assetid", skin.get(i).getAssetID());
+                obj.addProperty("appid", 570);
+                obj.addProperty("contextid", "2");
                 obj.addProperty("amount", "1");
+                obj.addProperty("assetid", skin.get(i).getAssetID());
                 array.add(obj);
             }
             user.add("assets", array);
+            user.add("currency", new JsonArray());
+            user.addProperty("ready", false);
+
             return user;
         }else return null;
     }
