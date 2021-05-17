@@ -1,14 +1,16 @@
 package com.example.demo.service;
 import com.example.demo.GeneralAPI;
-import com.example.demo.TradeBot;
+import com.example.demo.models.entity.SkinPrice;
 import com.example.demo.models.entity.Skins;
-import com.example.demo.models.entity.UsersProfile;
+import com.example.demo.models.entity.UserProfile;
 import com.example.demo.models.repository.SkinsRepository;
+import com.example.demo.utls.HTTPClientGame;
 import com.google.gson.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.net.*;
+import java.net.http.HttpClient;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -18,6 +20,7 @@ public class InventoryService {
     private static final String url = "https://steamcommunity.com/inventory/%username/730/2";
     private static final JsonParser jsonParser = new JsonParser();
     private final SkinsRepository skinsRepository;
+
     //QUALITIES
     private final int FACTORY_NEW = 1;
     private final int MINIMAL_WEAR = 2;
@@ -33,84 +36,57 @@ public class InventoryService {
             "(Battle-Scarred)"
     };
     @Autowired
+    private SkinPriceService skinPriceService;
+    @Autowired
     public InventoryService(SkinsRepository skinsRepository) {
         this.skinsRepository = skinsRepository;
     }
 
-    public JsonObject requestInventoryJsonObject(String steamID) throws IOException, InterruptedException {
-        JsonObject jsonObject = null;
-        try {
-            URL urlObject = new URL(url.replace("%username", steamID));
-            HttpURLConnection httpURLConnection = (HttpURLConnection) urlObject.openConnection();
-            httpURLConnection.connect();
-            int responseCode = httpURLConnection.getResponseCode();
-            System.out.println("RC: " + responseCode);
-            if (responseCode == 429) {
-                GeneralAPI.currentLog = "[Error] Your app has made too many requests.";
-                return null;
-            } else if (responseCode == 400) {
-                GeneralAPI.currentLog = "[Error] Bad Request.";
-                return null;
-            }
-            Scanner scanner = new Scanner(urlObject.openStream());
-            StringBuilder json = null;
-            while (scanner.hasNextLine()) {
-                if (json != null) {
-                    json.append(scanner.nextLine());
-                } else {
-                    json = new StringBuilder(scanner.nextLine());
-                }
-            }
-
-            if (json != null) {
-                jsonObject = (JsonObject) jsonParser.parse(json.toString());
-
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return jsonObject;
-    }
-
-
-    public List<Skins> mappJsonSkinArray(UsersProfile user)
+    public JsonObject requestInventory(String steamID)
     {
-        try {
-            String steamID = user.getId();
-            String steamIdFull = steamID;
-            steamID = steamID.substring(37);
-
-            JsonObject skinsJsonObject = requestInventoryJsonObject(steamID);
-            JsonArray skinDesctiptionJson = skinsJsonObject.getAsJsonArray("descriptions");
-            JsonArray skinAssetJson = skinsJsonObject.getAsJsonArray("assets");
-
-            List <Skins> skinsToDB= new ArrayList<>();
-            for (int i = 0; i<skinAssetJson.size();i++)
-            {
-                Skins userSkin= new Skins();
-                userSkin.setAssetID(skinAssetJson.get(i).getAsJsonObject().get("assetid").getAsString());
-                userSkin.setClassID(skinAssetJson.get(i).getAsJsonObject().get("classid").getAsString());
-                userSkin.setInstanceID(skinAssetJson.get(i).getAsJsonObject().get("instanceid").getAsString());
-                int k = searchJsonDescriptionForSkin(skinDesctiptionJson,skinAssetJson.get(i).getAsJsonObject().get("classid").getAsString());
-                userSkin.setIconUrl(skinDesctiptionJson.get(k).getAsJsonObject().get("icon_url").getAsString());
-                userSkin.setMarketHashName(skinDesctiptionJson.get(k).getAsJsonObject().get("market_hash_name").getAsString());
-                userSkin.setTradable(skinDesctiptionJson.get(k).getAsJsonObject().get("tradable").getAsInt());
-                userSkin.setMarketable(skinDesctiptionJson.get(k).getAsJsonObject().get("marketable").getAsInt());
-                userSkin.setQuality(defineSkinQuality(userSkin.getMarketHashName()));
-                userSkin.setOwnerID(steamIdFull);
-                skinsToDB.add(userSkin);
-            }
-            return skinsToDB;
-        }catch (Exception e){
-            e.printStackTrace();
+        String reqUrl = url.replace("%username", steamID.substring(37));
+        HTTPClientGame httpClientGame = new HTTPClientGame(reqUrl);
+        String response = httpClientGame.getAll();
+        if (response!=null) {
+            JsonObject jsonObject = (JsonObject) jsonParser.parse(response.toString());
+            return jsonObject;
         }
-        return null;
+        else throw new NullPointerException();
     }
 
-    public void updateUserSkinsDatabase(UsersProfile user)
+    public List<Skins> parseJsonToSkins(UserProfile user)
+    {
+        JsonObject skinsJsonObject = requestInventory(user.getId());
+        JsonArray skinDesctiptionJson = skinsJsonObject.getAsJsonArray("descriptions");
+        JsonArray skinAssetJson = skinsJsonObject.getAsJsonArray("assets");
+        List <Skins> skinsToDB= new ArrayList<>();
+        for (int i = 0; i<skinAssetJson.size();i++)
+        {
+            Skins userSkin= new Skins();
+            userSkin.setAssetID(skinAssetJson.get(i).getAsJsonObject().get("assetid").getAsString());
+            userSkin.setClassID(skinAssetJson.get(i).getAsJsonObject().get("classid").getAsString());
+            userSkin.setInstanceID(skinAssetJson.get(i).getAsJsonObject().get("instanceid").getAsString());
+            int k = searchJsonDescriptionForSkin(skinDesctiptionJson,skinAssetJson.get(i).getAsJsonObject().get("classid").getAsString());
+            userSkin.setIconUrl(skinDesctiptionJson.get(k).getAsJsonObject().get("icon_url").getAsString());
+            userSkin.setMarketHashName(skinDesctiptionJson.get(k).getAsJsonObject().get("market_hash_name").getAsString());
+            userSkin.setTradable(skinDesctiptionJson.get(k).getAsJsonObject().get("tradable").getAsInt());
+            if(userSkin.getTradable()==0)continue;// если предмететом нельзя обмениваться, в бд он не вносится
+            userSkin.setMarketable(skinDesctiptionJson.get(k).getAsJsonObject().get("marketable").getAsInt());
+            userSkin.setQuality(defineSkinQuality(userSkin.getMarketHashName()));
+            userSkin.setUserProfile(user);
+
+            userSkin.setSkinPrice(skinPriceService.requestOneSkinPrice(1,userSkin.getMarketHashName()));
+
+            skinsToDB.add(userSkin);
+        }
+        return skinsToDB;
+    }
+
+    //to-do цены обновляются только на скины которые перезаписались в дб, сделать обновление цен для старых скинов
+    public void updateUserSkinsDatabase(UserProfile user)
     {
         List<Skins> existSkins = getUserSkins(user); // скины, которые уже в бд
-        List<Skins> actualSkins = mappJsonSkinArray(user);//только что полученные скины от steam
+        List<Skins> actualSkins= parseJsonToSkins(user);
 
         if(!existSkins.containsAll(actualSkins)|| !actualSkins.containsAll(existSkins))
         {
@@ -128,9 +104,6 @@ public class InventoryService {
                 }
             }
         }
-        TradeBot tb = new TradeBot();
-        tb.makeTradeoffer(user.getId(),existSkins,actualSkins,"hui");
-
     }
 
     private String defineSkinQuality(String hashName)
@@ -142,9 +115,10 @@ public class InventoryService {
         return null;
     }
 
-    private List<Skins> getUserSkins (UsersProfile user)
+    private List<Skins> getUserSkins (UserProfile user)
     {
-        return skinsRepository.findAllByOwnerID(user.getId());
+        List<Skins> skinsList = user.getSkins();
+        return skinsList;
     }
 
     public int searchJsonDescriptionForSkin(JsonArray array, String searchValue){
@@ -155,13 +129,23 @@ public class InventoryService {
                 obj = array.get(i).getAsJsonObject();
                 if(obj.get("classid").getAsString().equals(searchValue))
                 {
-                   return i;
+                    return i;
                 }
             } catch (JsonIOException e) {
                 e.printStackTrace();
             }
         }
-       return -1;
+        return -1;
     }
-}
 
+    public String calculateInventoryCost (List<Skins> userSkins)
+    {
+        double cost=0;
+        for(int i =0; i<userSkins.size();i++)
+        {
+           cost+= userSkins.get(i).getSkinPrice().getLowestPrice();
+        }
+        return  String.valueOf(cost);
+    }
+
+}

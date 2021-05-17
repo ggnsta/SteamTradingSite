@@ -1,29 +1,48 @@
 package com.example.demo.models.entity;
 
+
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.Collection;
-import javax.persistence.Table;
+import java.util.List;
+import java.util.Set;
 
 @Entity
-public class UsersProfile implements UserDetails {
+public class UserProfile implements UserDetails {
     @Id
     private String id;
     private String name;
     private float balance;
-    private String tradeUrl;
+    private String partnerID;
+    private String tradeToken;
     private String smallAvatarUrl;
     private String mediumAvatarUrl;
     private String fullAvatarUrl;
     private LocalDateTime joinDateTime;
+    private int countOfTrades=0;
+    private String tradeUrl;
+    @OneToMany(mappedBy = "userProfile", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Skins> skins;
+    @OneToMany(mappedBy = "userProfileID", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<TradeOffer> tradeOffers;
 
+    public int getCountOfTrades() {
+        return countOfTrades;
+    }
 
-    public String getId() {
-        return id;
+    public void setCountOfTrades(int countOfTrades) {
+        this.countOfTrades = countOfTrades;
+    }
+
+    public List<TradeOffer> getTradeOffers() {
+        return tradeOffers;
+    }
+
+    public void setTradeOffers(List<TradeOffer> tradeOffers) {
+        this.tradeOffers = tradeOffers;
     }
 
     public String getTradeUrl() {
@@ -32,6 +51,34 @@ public class UsersProfile implements UserDetails {
 
     public void setTradeUrl(String tradeUrl) {
         this.tradeUrl = tradeUrl;
+    }
+
+    public List<Skins> getSkins() {
+        return skins;
+    }
+
+    public void setSkins(List<Skins> skins) {
+        this.skins = skins;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public String getPartnerID() {
+        return partnerID;
+    }
+
+    public void setPartnerID(String partnerID) {
+        this.partnerID = partnerID;
+    }
+
+    public String getTradeToken() {
+        return tradeToken;
+    }
+
+    public void setTradeToken(String tradeToken) {
+        this.tradeToken = tradeToken;
     }
 
     public String getFullAvatarUrl() {
@@ -50,7 +97,7 @@ public class UsersProfile implements UserDetails {
         this.joinDateTime = joinDateTime;
     }
 
-    public UsersProfile() {
+    public UserProfile() {
         this.joinDateTime= LocalDateTime.now();
     }
 
@@ -74,6 +121,13 @@ public class UsersProfile implements UserDetails {
         this.balance = balance;
     }
 
+    public int getCountOftrades() {
+        return countOfTrades;
+    }
+
+    public void setCountOftrades(int countOftrades) {
+        this.countOfTrades = countOftrades;
+    }
 
     public String getSmallAvatarUrl() {
         return smallAvatarUrl;

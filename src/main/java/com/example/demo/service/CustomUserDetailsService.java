@@ -1,7 +1,7 @@
 package com.example.demo.service;
 
-import com.example.demo.models.entity.UsersProfile;
-import com.example.demo.models.repository.UsersRepository;
+import com.example.demo.models.entity.UserProfile;
+import com.example.demo.models.repository.UserProfileRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.AuthenticationUserDetailsService;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -14,23 +14,23 @@ import java.util.Optional;
 @Service
 public class CustomUserDetailsService implements AuthenticationUserDetailsService<OpenIDAuthenticationToken> {
     @Autowired
-    private UsersRepository usersRepository;
+    private UserProfileRepository userProfileRepository;
 
 
 
     @Override
     public UserDetails loadUserDetails(OpenIDAuthenticationToken token) throws UsernameNotFoundException {
-        UsersProfile users;
+        UserProfile users;
         try {
-            Optional<UsersProfile> usersOptional = usersRepository.findById(token.getName());
+            Optional<UserProfile> usersOptional = userProfileRepository.findById(token.getName());
             if (usersOptional.isPresent()) users = usersOptional.get();
             else users = null;
             if (users != null) return users;
             throw new UsernameNotFoundException("Users is not found");
         } catch (RuntimeException e) {
-            users = new UsersProfile();
+            users = new UserProfile();
             users.setId(token.getName());
-            return usersRepository.save(users);
+            return userProfileRepository.save(users);
         }
     }
 }

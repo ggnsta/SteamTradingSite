@@ -15,10 +15,10 @@ public class BotInfo {
     public  String sharedSecret;
     public  String identitySecret;
     public  String deviceID;
-    public JsonObject cookies;
-    public JsonObject transferParameters;
+    public String cookies;
+  //  public JsonObject transferParameters;
 
-    public BotInfo(String steamLogin, String password, String tradeID, String tradeToken, String sharedSecret, String identitySecret, String deviceID, JsonObject cookies, JsonObject transferParameters) {
+    public BotInfo(String steamLogin, String password, String tradeID, String tradeToken, String sharedSecret, String identitySecret, String deviceID, String cookies) {
         this.steamLogin = steamLogin;
         this.password = password;
         this.tradeID = tradeID;
@@ -27,6 +27,14 @@ public class BotInfo {
         this.identitySecret = identitySecret;
         this.deviceID = deviceID;
         this.cookies = cookies;
-        this.transferParameters = transferParameters;
+        //this.transferParameters = transferParameters;
+    }
+
+    public String getCookies() {
+        return cookies;
+    }
+
+    public void setCookies(String cookies) {
+        this.cookies = cookies;
     }
 }

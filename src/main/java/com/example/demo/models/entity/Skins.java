@@ -10,17 +10,40 @@ public class Skins {
     @Id
     @GeneratedValue(generator="system-uuid")
     @GenericGenerator(name="system-uuid", strategy = "uuid")
-    String id;
-    String ownerID;
-    String assetID;
-    String classID;
-    String instanceID;
-    @Column(length = 300)
-    String iconUrl;
-    int tradable;
-    String marketHashName;
-    int marketable;
-    String quality;
+    private String id;
+    private String assetID;
+    private String classID;
+    private String instanceID;
+    private String iconUrl;
+    private int tradable;
+    private String marketHashName;
+    private int marketable;
+    private String quality;
+    @ManyToOne(fetch = FetchType.LAZY)
+    private UserProfile userProfile; //id
+    @ManyToOne
+    @JoinColumn (name="marketHashName",referencedColumnName = "market_hash_name",insertable = false, updatable = false, nullable = true)
+    private SkinPrice skinPrice;
+
+    public SkinPrice getSkinPrice() {
+        return skinPrice;
+    }
+
+    public void setSkinPrice(SkinPrice skinPrice) {
+        this.skinPrice = skinPrice;
+    }
+
+    public void setMarketable(int marketable) {
+        this.marketable = marketable;
+    }
+
+    public UserProfile getUserProfile() {
+        return userProfile;
+    }
+
+    public void setUserProfile(UserProfile userProfile) {
+        this.userProfile = userProfile;
+    }
 
     public String getQuality() {
         return quality;
@@ -105,15 +128,5 @@ public class Skins {
         return marketable;
     }
 
-    public void setMarketable(int marketable) {
-        this.marketable = marketable;
-    }
-    public String getOwnerID() {
-        return ownerID;
-    }
-
-    public void setOwnerID(String ownerID) {
-        this.ownerID = ownerID;
-    }
 
 }

@@ -1,9 +1,59 @@
-<html lang="en">
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Здарова</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/profile-info.css">
+    <title>Trade Bot</title>
 </head>
 <body>
+<header>
+    <div class="headerName"><img src="./steam.svg"><p>Bsuir Trade Bot</p></div>
+    <div class="menu">
+        <ul class="navigation">
+            <li><a href="#">Магазин</a></li>
+            <li><a href="#">Продажа</a></li>
+            <li><div class="balance">
+                <div><p>Баланс<div id="balance">$ 0</div></p></div>
+                <button type="button">+</button>
+            </div>
+            <li><img src="./fd448cada3660cf05251a51198a383dbd42f7e9f_full.jpg"></li>
+        </ul>
 
+    </div>
+</header>
+<section class="mainPage">
+    <div class="center">
+        <h1>Личная информация</h1>
+        <div class="profile">
+            <h2>Профиль</h2>
+            <ul>
+                <li><div class="imgName">
+                    <img th:src="${mediumImgURL}" width="64px" height="64px">
+                    <p th:text = "${steamNickname}"/>
+                </div></li>
+                <i></i>
+                <li>Регистрация: <text th:text = "${joinDateTime}"/></li>
+                <i></i>
+                <li>Обменов:<text th:text = "${countOfTrades}"/></li>
+            </ul>
+        </div>
+        <div class="info">
+            <h2>Общая информация</h2>
+            <div class="tradeLink">
+                <p>Trade link:</p>
+                <form action="/profile-info/setTradeUrl" method="post">
+                    <input type="text"  name="tradeUrlArea" style="outline: none;" id="textLink" th:value="${tradeUrl}">
+                    <button class="resetBtn" type="reset">X</button>
+                    <button type="submit"  class="btn btn-success"> Применить</button>
+                </form>
+                <form action="http://steamcommunity.com/my/tradeoffers/privacy"target="_blank">
+                    <button id="getLink"> Получить ссылку</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
 </body>
 </html>

@@ -3,9 +3,8 @@ package com.example.demo.models.entity;
 import com.google.gson.JsonObject;
 import org.hibernate.annotations.GenericGenerator;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.List;
 
 @Entity
 public class BotDetails {
@@ -22,6 +21,16 @@ public class BotDetails {
     private String password;
     private String cookies;
     private String transferParameters;
+    @OneToMany(mappedBy = "botLogin", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<TradeOffer> tradeOffers;
+
+    public List<TradeOffer> getTradeOffers() {
+        return tradeOffers;
+    }
+
+    public void setTradeOffers(List<TradeOffer> tradeOffers) {
+        this.tradeOffers = tradeOffers;
+    }
 
     public String getCookies() {
         return cookies;

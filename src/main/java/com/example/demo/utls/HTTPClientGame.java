@@ -15,6 +15,7 @@ import org.apache.http.client.methods.HttpGet;
 
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicHeader;
+import org.openid4java.server.ServerException;
 
 public class HTTPClientGame {
     private HttpClient client;
@@ -29,7 +30,7 @@ public class HTTPClientGame {
     }
 
     //EXCEP SLOVIT
-    public String getAll()  {
+    public String getAll(){
         try {
             client = HttpClientBuilder.create().build();
             HttpGet get = new HttpGet(URIl);
@@ -41,9 +42,9 @@ public class HTTPClientGame {
             return inputStreamToString(response.getEntity().getContent());
 
 
-        } catch (IOException e) {
-            //throw new ServerException(e.getMessage(), e, 500);
-            return "0";
+        } catch (Exception e) {
+          e.printStackTrace();
+          return null;
         }
     }
 
@@ -63,7 +64,6 @@ public class HTTPClientGame {
         } catch (IOException e) {
 
         }
-
         // Return full string
         return total.toString();
     }
@@ -98,16 +98,16 @@ public class HTTPClientGame {
     }
 
 
-    private void throwServerException(HttpResponse response, int goodCode)  {
+    private void throwServerException(HttpResponse response, int goodCode) throws ServerException {
         if (response.getStatusLine().getStatusCode() == goodCode) return;
 
         switch (response.getStatusLine().getStatusCode()) {
             case 404:
-                // throw new ServerException("Item wasn't found!", 404);
+                 throw new ServerException("Item wasn't found!", 404);
             case 204:
-                // throw new ServerException("There is no content", 204);
+                 throw new ServerException("There is no content", 204);
             case 409:
-                //   throw new ServerException("The item already exists", 409);
+                 throw new ServerException("The item already exists", 409);
             default:
                 //  throw new ServerException("Server error occurred!", response.getStatusLine().getStatusCode());
         }

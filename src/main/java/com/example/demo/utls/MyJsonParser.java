@@ -10,10 +10,24 @@ import java.util.List;
 
 public class MyJsonParser {
 
-    private JsonParser parser;
+    private JsonParser parser=new JsonParser();
 
+    public   List<String> parsePriceOwerview(String stringToParse)
+    {
+        JsonElement jsonTree = parser.parse(stringToParse);
+        JsonObject obj = jsonTree.getAsJsonObject();
+        List<String> priceOwerview = new ArrayList<>();
+
+        if(obj.get("success").getAsString()=="true")
+        {
+            priceOwerview.add(obj.get("lowest_price").getAsString());
+            priceOwerview.add(obj.get("median_price").getAsString());
+            return priceOwerview;
+        }
+        else return null;
+    }
     public List<String> parseUserInfoList(String stringToParse) {
-        parser= new JsonParser();
+
         JsonElement jsonTree = parser.parse(stringToParse);
         JsonObject obj = jsonTree.getAsJsonObject();
         obj = obj.getAsJsonObject("response");

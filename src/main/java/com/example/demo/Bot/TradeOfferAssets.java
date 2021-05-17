@@ -14,36 +14,19 @@ import java.util.List;
 public class TradeOfferAssets {
 
 
-    private static class OnlySkinsAssets
-    {
-        private String appid;
-        private String contextid;
-        private String ammount;
-        private String assetid;
-
-        public OnlySkinsAssets(String appid, String contextid, String ammount, String assetid) {
-            this.appid = appid;
-            this.contextid = contextid;
-            this.ammount = ammount;
-            this.assetid = assetid;
-        }
-    }
-
-    public static JsonObject  doShit (List<Skins> bot,List<Skins> user)
+    public static JsonObject  tradableSkinsToJson (List<Skins> bot,List<Skins> user)
     {
 
         JsonObject jsonTradeOffer = new JsonObject();
         jsonTradeOffer.addProperty("newversion" ,true);
         jsonTradeOffer.addProperty("version",2);
-        jsonTradeOffer.add("me",dogoodShit(bot));
-        jsonTradeOffer.add("them",dogoodShit(user));
-
-
+        jsonTradeOffer.add("me",makePartOfAssets(bot));
+        jsonTradeOffer.add("them",makePartOfAssets(user));
 
         return jsonTradeOffer;
     }
 
-    public static JsonObject dogoodShit(List<Skins> skin)
+    public static JsonObject makePartOfAssets(List<Skins> skin)
     {
         if (skin!=null) {
 
@@ -64,24 +47,5 @@ public class TradeOfferAssets {
             return user;
         }else return null;
     }
-
-    private static JsonObject makePartOfAssets(List<Skins> skin)
-    {
-        if (skin!=null) {
-            List<OnlySkinsAssets> assets = new ArrayList<>();
-            for (int i = 0; i < skin.size(); i++) {
-                assets.add(new OnlySkinsAssets("530", "2", "1", skin.get(i).getAssetID()));
-            }
-            JsonElement elementAseets = new Gson().toJsonTree(assets);
-            JsonObject objAssets = new JsonObject();
-            objAssets.add("assets", elementAseets);
-            objAssets.add("currency", new JsonArray()); // неиспользуемый, но необходимый параметр, должен быть массивом[]
-            objAssets.addProperty("ready", "false");
-            return objAssets;
-        }
-        else
-            return null;
-    }
-
 
 }
