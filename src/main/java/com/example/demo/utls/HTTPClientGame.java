@@ -6,6 +6,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URI;
 import java.net.http.HttpRequest;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.http.Header;
@@ -19,14 +21,19 @@ import org.openid4java.server.ServerException;
 
 public class HTTPClientGame {
     private HttpClient client;
-    private Header contentTypeHeader;
+    private List<Header> headers= new ArrayList<>();
     private String URIl;
 
     public HTTPClientGame(String URL) {
-        contentTypeHeader = new BasicHeader("Content-Type", "application/json; charset=UTF-8");
+        headers.add(new BasicHeader("Content-Type", "application/json; charset=UTF-8"));
         client = HttpClientBuilder.create().build();
         this.URIl = URL;
+    }
 
+    public HTTPClientGame(String URL, List<Header> headers)
+    {
+        this.URIl = URL;
+        this.headers = headers;
     }
 
     //EXCEP SLOVIT
@@ -34,13 +41,15 @@ public class HTTPClientGame {
         try {
             client = HttpClientBuilder.create().build();
             HttpGet get = new HttpGet(URIl);
-            get.addHeader(contentTypeHeader);
+            for(int i=0;i<headers.size();i++)
+            {
+                get.addHeader(headers.get(i));
+            }
 
             HttpResponse response = client.execute(get);
 
             throwServerException(response, 200);
             return inputStreamToString(response.getEntity().getContent());
-
 
         } catch (Exception e) {
           e.printStackTrace();

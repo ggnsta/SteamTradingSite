@@ -44,7 +44,7 @@ public class InventoryService {
 
     public JsonObject requestInventory(String steamID)
     {
-        String reqUrl = url.replace("%username", steamID.substring(37));
+        String reqUrl = url.replace("%username", steamID);
         HTTPClientGame httpClientGame = new HTTPClientGame(reqUrl);
         String response = httpClientGame.getAll();
         if (response!=null) {

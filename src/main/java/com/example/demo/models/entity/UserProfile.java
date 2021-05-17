@@ -29,13 +29,7 @@ public class UserProfile implements UserDetails {
     @OneToMany(mappedBy = "userProfileID", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<TradeOffer> tradeOffers;
 
-    public int getCountOfTrades() {
-        return countOfTrades;
-    }
 
-    public void setCountOfTrades(int countOfTrades) {
-        this.countOfTrades = countOfTrades;
-    }
 
     public List<TradeOffer> getTradeOffers() {
         return tradeOffers;
@@ -121,13 +115,6 @@ public class UserProfile implements UserDetails {
         this.balance = balance;
     }
 
-    public int getCountOftrades() {
-        return countOfTrades;
-    }
-
-    public void setCountOftrades(int countOftrades) {
-        this.countOfTrades = countOftrades;
-    }
 
     public String getSmallAvatarUrl() {
         return smallAvatarUrl;

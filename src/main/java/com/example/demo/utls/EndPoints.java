@@ -7,4 +7,5 @@ public class EndPoints {
     public static final String MOBILEAUTH_GETWGTOKEN =STEAMAPI_BASE + "/IMobileAuthService/GetWGToken/v0001";
     public static final String TWO_FACTOR_BASE = STEAMAPI_BASE + "/ITwoFactorService/%s/v0001";
     public static final String TWO_FACTOR_TIME_QUERY = STEAMAPI_BASE + "/ITwoFactorService/QueryTime/v0001";
+    public static final String ApiKey="6DB0B555FA0F62FD7622E385682AADB2";
 }

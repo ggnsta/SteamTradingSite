@@ -25,7 +25,7 @@ public class UsersService {
     public List<String> getSteamUserNameAndAvatarUrl(UserProfile users)
     {
         List<String> userInfo = new ArrayList<>();
-        String openID = getOpenId(users);
+        String openID = users.getId();
         try{
             String userUrl = "http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=6DB0B555FA0F62FD7622E385682AADB2&steamids=" + openID;
             String gameString = new HTTPClientGame(userUrl).getAll();
@@ -39,9 +39,7 @@ public class UsersService {
 
 
     private String getOpenId(UserProfile users) {
-        //возможно тут надо было через реп
-        String openIdUrl = users.getId();
-        return openIdUrl.substring(36);
+        return users.getId();
     }
 
     //method for updating user;

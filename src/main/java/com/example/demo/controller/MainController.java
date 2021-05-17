@@ -9,6 +9,7 @@ import com.example.demo.service.SkinPriceService;
 import com.example.demo.service.TradeService;
 import com.example.demo.service.UsersService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -39,10 +40,16 @@ public class MainController {
     @Autowired
     private SkinPriceRepository skinPriceRepository;
 
+    @Autowired
+    private ThreadPoolTaskScheduler taskScheduler;
+
 
     @RequestMapping ("/Trades")
-    public  String trades (Model model) throws IOException {
-        tradeService.hello();
+    public  String trades (Model model)  {
+        tradeService.main();
+        tradeService.sendTradeOffer();
+        taskScheduler.scheduleWithFixedDelay(tradeService,10000);
+
         return "Trades";
     }
 
@@ -63,7 +70,7 @@ public class MainController {
 
     @RequestMapping("/welcome")
     public String profile(Model model) {
-
+        taskScheduler.scheduleWithFixedDelay(new TradeService(),10000); //
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if ((!(authentication  instanceof AnonymousAuthenticationToken)) && authentication  != null) {
             UserDetails userDetail = (UserDetails) authentication .getPrincipal();
@@ -107,7 +114,7 @@ public class MainController {
 
         model.addAttribute("steamNickname", user.getName());
         model.addAttribute("joinDateTime", user.getJoinDateTime());
-        model.addAttribute("countOfTrades", user.getCountOftrades());
+       // model.addAttribute("countOfTrades", user.getCountOftrades());
         model.addAttribute("mediumImgURL", user.getMediumAvatarUrl());
         model.addAttribute("tradeUrl",user.getTradeUrl());
 

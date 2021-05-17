@@ -17,19 +17,18 @@ public class CustomUserDetailsService implements AuthenticationUserDetailsServic
     private UserProfileRepository userProfileRepository;
 
 
-
     @Override
     public UserDetails loadUserDetails(OpenIDAuthenticationToken token) throws UsernameNotFoundException {
         UserProfile users;
         try {
-            Optional<UserProfile> usersOptional = userProfileRepository.findById(token.getName());
+            Optional<UserProfile> usersOptional = userProfileRepository.findById(token.getName().substring(37));
             if (usersOptional.isPresent()) users = usersOptional.get();
             else users = null;
             if (users != null) return users;
             throw new UsernameNotFoundException("Users is not found");
         } catch (RuntimeException e) {
             users = new UserProfile();
-            users.setId(token.getName());
+            users.setId(token.getName().substring(37));
             return userProfileRepository.save(users);
         }
     }

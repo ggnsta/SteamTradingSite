@@ -5,14 +5,22 @@ import com.example.demo.models.entity.Skins;
 import com.example.demo.models.entity.TradeOffer;
 import com.example.demo.models.entity.UserProfile;
 import com.example.demo.models.repository.BotDetailsRepository;
+import com.example.demo.models.repository.TradeOfferRepository;
 import com.example.demo.models.repository.UserProfileRepository;
+import com.example.demo.utls.EndPoints;
+import com.example.demo.utls.HTTPClientGame;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.http.Header;
 import org.apache.http.HttpEntity;
+import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
+import org.apache.http.message.BasicHeader;
 import org.apache.http.util.EntityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -21,6 +29,8 @@ import org.springframework.stereotype.Component;
 import java.io.*;
 import java.math.BigInteger;
 import java.net.*;
+import java.security.Timestamp;
+import java.time.LocalTime;
 import java.util.*;
 
 @Component
@@ -30,14 +40,16 @@ public class BotManager {
     private BotDetailsRepository botDetailsRepositorydr;
     @Autowired
     private UserProfileRepository userProfileRepository;
+    @Autowired TradeOfferRepository tradeOfferRepository;
     private BotInfo botInfo;
     public static final String TIMEOFFSET = "10800"; // belarus gmt+3 = 3600s * 3
     private final String sendUrl = "https://steamcommunity.com/tradeoffer/new/send";
     private BotDetails bd=new BotDetails();//
     private  String sessionID;
+    private String botLogin="qiqimc";
 
-    public void main () throws IOException {
-        BotDetails botDetails = botDetailsRepositorydr.findBotDetailsBySteamLogin("qiqimc"); // ищем в бд нужного бота;
+    public void initializeBot () {
+        BotDetails botDetails = botDetailsRepositorydr.findBotDetailsBySteamLogin(botLogin); // ищем в бд нужного бота;
         this.bd=botDetails;//
 
         this.botInfo = new BotInfo(
@@ -61,15 +73,6 @@ public class BotManager {
        else //если куки есть, т.е. авторизация была
         {
             addCommonCookies();
-            Skins skin = new Skins();
-            skin.setAssetID("7017914866");
-            List<Skins> skinlist = new ArrayList<>();
-            skinlist.add(skin);
-            List<Skins> skinlist2 = new ArrayList<>();
-
-          //  sendTradeOffer(skinlist,skinlist2,"76561198401441827","");
-
-            cancelTradeOffer("4607810784");
         }
 
     }
@@ -84,13 +87,35 @@ public class BotManager {
         return  tradeCode;
     }
 
-    private  void sendTradeOffer(List<Skins> botSkins, List <Skins> userSkins, String partnerSteamID,String userTradeOfferAccessToken) throws IOException {
+    public int requestTradeOfferStatus(String tradeOfferID)
+    {
+        String url = "https://api.steampowered.com/IEconService/GetTradeOffer/v1/?key=%key&tradeofferid=%tradeofferid";
+        url=url.replace("%key", EndPoints.ApiKey).replace("%tradeofferid",tradeOfferID);
+        List<Header> headers = new ArrayList<>();
+        headers.add(new BasicHeader("Accept", "*/*"));
+        headers.add(new BasicHeader("Cookie",botInfo.getCookies()));
+        headers.add(new BasicHeader("Content-Type", "application/x-www-form-urlencoded"));
+
+        HTTPClientGame httpClientGame = new HTTPClientGame(url,headers);
+        String response = httpClientGame.getAll();
+        JsonObject responseJson = new Gson().fromJson(response, JsonObject.class);
+        response = responseJson.getAsJsonObject("response").getAsJsonObject("offer").get("trade_offer_state").toString();
+        return Integer.parseInt(response);
+    }
+
+    public void sendTradeOffer(List<Skins> botSkins, List <Skins> userSkins, String partnerSteamID,String userTradeOfferAccessToken)
+    {
+        String securityTradeCode = generateTradeOfferMessage();
+        String tradeOfferId = makeTradeOfferRequest(botSkins,userSkins,partnerSteamID,userTradeOfferAccessToken,securityTradeCode);
+        createTradeOfferObj(tradeOfferId,botLogin,partnerSteamID,securityTradeCode);
+    }
+    private String makeTradeOfferRequest(List<Skins> botSkins, List <Skins> userSkins, String partnerSteamID,String userTradeOfferAccessToken, String tradeOfferMessage)  {
 
         Map<String, String> data = new HashMap<String, String>();
         data.put("sessionid", this.sessionID);
         data.put("serverid", "1");
         data.put("partner", partnerSteamID);
-        data.put("tradeoffermessage", "");
+        data.put("tradeoffermessage", tradeOfferMessage);
         data.put("json_tradeoffer", TradeOfferAssets.tradableSkinsToJson(botSkins,userSkins).toString());
         data.put("trade_offer_create_params", userTradeOfferAccessToken);
         String requestBody = encodeRequestBody(data);
@@ -98,17 +123,26 @@ public class BotManager {
         String requestAdress= "https://steamcommunity.com/tradeoffer/new/send";
         String refer = "https://steamcommunity.com/tradeoffer/new/?partner=&token=";
 
-        CloseableHttpClient client = HttpClients.createDefault();
-        HttpPost httpPost = new HttpPost(requestAdress);
-        httpPost= addHeaders(httpPost,refer,botInfo.getCookies());
-        httpPost.setEntity(new StringEntity(requestBody));
+        try {
+            CloseableHttpClient client = HttpClients.createDefault();
+            HttpPost httpPost = new HttpPost(requestAdress);
+            httpPost = addHeaders(httpPost, refer, botInfo.getCookies());
+            httpPost.setEntity(new StringEntity(requestBody));
 
-        CloseableHttpResponse response = client.execute(httpPost);
-        int a =response.getStatusLine().getStatusCode();
-        HttpEntity entity=response.getEntity();
-        String responseString = EntityUtils.toString(entity, "UTF-8");
-        System.out.println(responseString);
-        client.close();
+            CloseableHttpResponse response = client.execute(httpPost);
+            int a = response.getStatusLine().getStatusCode();
+            HttpEntity entity = response.getEntity();
+            String responseString = EntityUtils.toString(entity, "UTF-8");
+            JsonObject responseJson = new Gson().fromJson(responseString, JsonObject.class);
+            client.close();
+
+            System.out.println(responseJson.get("tradeofferid"));
+            if (responseJson.has("tradeofferid")) return responseJson.get("tradeofferid").getAsString();
+                else return null;
+        }catch (Exception ex){
+            ex.printStackTrace();
+        }
+        return  null;
     }
 
     public void cancelTradeOffer(String tradeOfferID) throws IOException {
@@ -129,16 +163,18 @@ public class BotManager {
         System.out.println(responseString);
         client.close();
 
-
     }
 
-    private void createTradeOfferObj(String tradeOfferID, String botLogin, String partnerID)
+    private void createTradeOfferObj(String tradeOfferID, String botLogin, String partnerID, String securityTradeCode)
     {
         TradeOffer tradeOffer = new TradeOffer();
         tradeOffer.setId(tradeOfferID);
+        tradeOffer.setStatus(2); //2-tradeoffer отправлен
         tradeOffer.setBotLogin(botDetailsRepositorydr.findBotDetailsBySteamLogin(botLogin));
         tradeOffer.setUserProfileID(userProfileRepository.findById(partnerID).get());
-        tradeOffer.setMessage(generateTradeOfferMessage());
+        tradeOffer.setMessage(securityTradeCode);
+        tradeOffer.setCreateTime(LocalTime.now());
+        tradeOfferRepository.save(tradeOffer);
     }
 
     private void addCommonCookies() {
@@ -149,7 +185,6 @@ public class BotManager {
         strBuffer.append(";bCompletedTradeOfferTutorial="+"true");
         strBuffer.append(";sessionid="+this.sessionID);
         botInfo.setCookies(strBuffer.toString());
-        System.out.println(botInfo);
     }
 
     private HttpPost addHeaders(HttpPost httpPost, String referer,String cookies)

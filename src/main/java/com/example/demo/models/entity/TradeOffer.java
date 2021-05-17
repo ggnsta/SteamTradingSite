@@ -4,6 +4,8 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import java.sql.Timestamp;
+import java.time.LocalTime;
 
 @Entity
 public class TradeOffer {
@@ -16,6 +18,15 @@ public class TradeOffer {
     private BotDetails botLogin;
     private String message;
     private int status;
+    private LocalTime createTime = LocalTime.now();
+
+    public LocalTime getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(LocalTime createTime) {
+        this.createTime = createTime;
+    }
 
     public String getId() {
         return id;
