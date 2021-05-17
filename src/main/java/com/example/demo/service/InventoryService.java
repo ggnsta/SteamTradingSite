@@ -1,6 +1,4 @@
 package com.example.demo.service;
-import com.example.demo.GeneralAPI;
-import com.example.demo.models.entity.SkinPrice;
 import com.example.demo.models.entity.Skins;
 import com.example.demo.models.entity.UserProfile;
 import com.example.demo.models.repository.SkinsRepository;
@@ -8,12 +6,9 @@ import com.example.demo.utls.HTTPClientGame;
 import com.google.gson.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import java.io.IOException;
-import java.net.*;
-import java.net.http.HttpClient;
+
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 
 @Service
 public class InventoryService {
