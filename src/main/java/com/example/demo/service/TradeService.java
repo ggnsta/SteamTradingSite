@@ -13,7 +13,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
 import java.io.IOException;
+import java.time.Duration;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,9 +31,12 @@ public class TradeService implements Runnable{
     @Autowired
     private UserProfileRepository userProfileRepository;
 
+
+
     @Override
     public void run()
     {
+        LocalTime currentTime;
         try {
             activeTradeOffers = tradeOfferRepository.findAllByStatus(2);
             if (activeTradeOffers.size()>0)
@@ -50,6 +56,13 @@ public class TradeService implements Runnable{
                         activeTradeOffers.get(i).setStatus(7);
                         tradeOfferRepository.save(activeTradeOffers.get(i));
                     }
+                    currentTime = LocalTime.now();
+                    Duration timeElapsed = Duration.between(activeTradeOffers.get(i).getCreateTime(), currentTime);
+                    System.out.println(timeElapsed.toSeconds());
+                    if (timeElapsed.toSeconds()>600) // если статус обмена не изменяется больше 10 минут, т.е. пользователь его игнорирует, то отменяем обмен
+                    {
+                        botManager.cancelTradeOffer(activeTradeOffers.get(i).getId());
+                    }
                 }
             }
             else System.out.println(Thread.currentThread().getName());
@@ -58,7 +71,7 @@ public class TradeService implements Runnable{
             ex.printStackTrace();
         }
     }
-
+    @PostConstruct
     public void main()
     {
         botManager.initializeBot();
@@ -67,7 +80,7 @@ public class TradeService implements Runnable{
     public void sendTradeOffer()
     {
         Skins skin = new Skins();
-        skin.setAssetID("7017914833");
+        skin.setAssetID("6846332964");
         List<Skins> skinlist = new ArrayList<>();
         skinlist.add(skin);
         List<Skins> skinlist2 = new ArrayList<>();

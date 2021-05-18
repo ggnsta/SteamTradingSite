@@ -3,6 +3,7 @@ package com.example.demo.controller;
 import com.example.demo.models.entity.Skins;
 import com.example.demo.models.entity.UserProfile;
 import com.example.demo.models.repository.SkinPriceRepository;
+import com.example.demo.models.repository.TradeOfferRepository;
 import com.example.demo.models.repository.UserProfileRepository;
 import com.example.demo.service.InventoryService;
 import com.example.demo.service.SkinPriceService;
@@ -39,9 +40,10 @@ public class MainController {
     private SkinPriceService skinPriceService;
     @Autowired
     private SkinPriceRepository skinPriceRepository;
-
     @Autowired
     private ThreadPoolTaskScheduler taskScheduler;
+    @Autowired
+    private TradeOfferRepository tradeOfferRepository;
 
 
     @RequestMapping ("/Trades")
@@ -70,7 +72,6 @@ public class MainController {
 
     @RequestMapping("/welcome")
     public String profile(Model model) {
-        taskScheduler.scheduleWithFixedDelay(new TradeService(),10000); //
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if ((!(authentication  instanceof AnonymousAuthenticationToken)) && authentication  != null) {
             UserDetails userDetail = (UserDetails) authentication .getPrincipal();
