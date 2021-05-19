@@ -38,12 +38,12 @@ public class TradeService implements Runnable{
     {
         LocalTime currentTime;
         try {
-            activeTradeOffers = tradeOfferRepository.findAllByStatus(2);
+            activeTradeOffers = tradeOfferRepository.findAllByStatus(2); //ищем в бд, офферы со статусом =2 (отправлен)
             if (activeTradeOffers.size()>0)
             {
                 for(int i =0;i < activeTradeOffers.size();i++)
                 {
-                    int status = botManager.requestTradeOfferStatus(activeTradeOffers.get(i).getId());
+                    int status = botManager.requestTradeOfferStatus(activeTradeOffers.get(i).getId());// запрашиваем у steam текущий статус этого офера
                     System.out.println(activeTradeOffers.get(i).getId()+":"+status);
                     if (status==3) // принят пользователем
                     {
@@ -59,9 +59,13 @@ public class TradeService implements Runnable{
                     currentTime = LocalTime.now();
                     Duration timeElapsed = Duration.between(activeTradeOffers.get(i).getCreateTime(), currentTime);
                     System.out.println(timeElapsed.toSeconds());
-                    if (timeElapsed.toSeconds()>600) // если статус обмена не изменяется больше 10 минут, т.е. пользователь его игнорирует, то отменяем обмен
+                    if (timeElapsed.toSeconds()>600) // если статус обмена не изменяется больше 10 минут после создания офера, т.е. пользователь его игнорирует, то отменяем обмен
                     {
-                        botManager.cancelTradeOffer(activeTradeOffers.get(i).getId());
+                        if(botManager.cancelTradeOffer(activeTradeOffers.get(i).getId()))//отменяем обмен
+                        {
+                            activeTradeOffers.get(i).setStatus(7);
+                            tradeOfferRepository.save(activeTradeOffers.get(i));
+                        }
                     }
                 }
             }
@@ -71,7 +75,7 @@ public class TradeService implements Runnable{
             ex.printStackTrace();
         }
     }
-    @PostConstruct
+    @PostConstruct // ?
     public void main()
     {
         botManager.initializeBot();

@@ -11,6 +11,7 @@ import com.example.demo.utls.EndPoints;
 import com.example.demo.utls.HTTPClientGame;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
@@ -42,7 +43,7 @@ public class BotManager {
     private UserProfileRepository userProfileRepository;
     @Autowired TradeOfferRepository tradeOfferRepository;
     private BotInfo botInfo;
-    public static final String TIMEOFFSET = "10800"; // belarus gmt+3 = 3600s * 3
+    public static final String TimeOffset = "10800"; // belarus gmt+3 = 3600s * 3
     private final String sendUrl = "https://steamcommunity.com/tradeoffer/new/send";
     private BotDetails bd=new BotDetails();//
     private  String sessionID;
@@ -66,7 +67,7 @@ public class BotManager {
         {
             BotLogin botLogin = new BotLogin(botInfo);
             botLogin.prepareLogin();
-            botDetails.setCookies(botLogin.getCookies().toString());
+            botDetails.setCookies(botLogin.getCookies());
            // botDetails.setTransferParameters(botLogin.getTransferParameters().toString());
             botDetailsRepositorydr.save(botDetails);
         }
@@ -106,10 +107,10 @@ public class BotManager {
     public void sendTradeOffer(List<Skins> botSkins, List <Skins> userSkins, String partnerSteamID,String userTradeOfferAccessToken)
     {
         String securityTradeCode = generateTradeOfferMessage();
-        String tradeOfferId = makeTradeOfferRequest(botSkins,userSkins,partnerSteamID,userTradeOfferAccessToken,securityTradeCode);
-        createTradeOfferObj(tradeOfferId,botLogin,partnerSteamID,securityTradeCode);
+        String tradeOfferId = tradeOfferRequest(botSkins,userSkins,partnerSteamID,userTradeOfferAccessToken,securityTradeCode);
+        createTradeOfferEntity(tradeOfferId,botLogin,partnerSteamID,securityTradeCode);
     }
-    private String makeTradeOfferRequest(List<Skins> botSkins, List <Skins> userSkins, String partnerSteamID,String userTradeOfferAccessToken, String tradeOfferMessage)  {
+    private String tradeOfferRequest(List<Skins> botSkins, List <Skins> userSkins, String partnerSteamID,String userTradeOfferAccessToken, String tradeOfferMessage)  {
 
         Map<String, String> data = new HashMap<String, String>();
         data.put("sessionid", this.sessionID);
@@ -145,7 +146,7 @@ public class BotManager {
         return  null;
     }
 
-    public void cancelTradeOffer(String tradeOfferID) throws IOException {
+    public boolean cancelTradeOffer(String tradeOfferID) throws IOException {
         String url = "https://steamcommunity.com/tradeoffer/" + tradeOfferID+ "/cancel";
         Map<String, String> data = new HashMap<String, String>();
         data.put("sessionid", this.sessionID);
@@ -160,12 +161,21 @@ public class BotManager {
         int a =response.getStatusLine().getStatusCode();
         HttpEntity entity=response.getEntity();
         String responseString = EntityUtils.toString(entity, "UTF-8");
-        System.out.println(responseString);
+        System.out.println(responseString); // to do проверка результата
+        JsonObject responseJson = new Gson().fromJson(responseString, JsonObject.class);
         client.close();
-
+        if(responseJson.has("tradeofferid"))
+        {
+            if (responseJson.get("tradeofferid").getAsString().equals(tradeOfferID))
+            {
+                return true;
+            }
+            else return false;
+        }
+        return false;
     }
 
-    private void createTradeOfferObj(String tradeOfferID, String botLogin, String partnerID, String securityTradeCode)
+    private void createTradeOfferEntity(String tradeOfferID, String botLogin, String partnerID, String securityTradeCode)
     {
         TradeOffer tradeOffer = new TradeOffer();
         tradeOffer.setId(tradeOfferID);
@@ -181,7 +191,7 @@ public class BotManager {
         this.sessionID = generateSessionId();
         String cookies = botInfo.getCookies();
         StringBuffer strBuffer = new StringBuffer(cookies);
-        strBuffer.append(";timezoneOffset="+TIMEOFFSET);
+        strBuffer.append(";timezoneOffset="+TimeOffset);
         strBuffer.append(";bCompletedTradeOfferTutorial="+"true");
         strBuffer.append(";sessionid="+this.sessionID);
         botInfo.setCookies(strBuffer.toString());

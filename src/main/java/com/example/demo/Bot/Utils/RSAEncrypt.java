@@ -9,21 +9,21 @@ import java.util.Base64;
 
 public class RSAEncrypt {
 
-    private final String PASSWORD;
-    private final String publickey_mod;
-    private final String publickey_exp;
+    private final String password;
+    private final String publickeyMod;
+    private final String publickeyExp;
 
-    public RSAEncrypt(String pass, String publickey_mod, String publickey_exp){
-        this.PASSWORD = pass;
-        this.publickey_exp = publickey_exp;
-        this.publickey_mod = publickey_mod;
+    public RSAEncrypt(String pass, String publickeyMod, String publickeyExp){
+        this.password = pass;
+        this.publickeyExp = publickeyExp;
+        this.publickeyMod = publickeyMod;
     }
 
     // encrypt the password
     private String encrypt(){
 
-        BigInteger mod = new BigInteger(publickey_mod, 16);
-        BigInteger exp = new BigInteger(publickey_exp, 16);
+        BigInteger mod = new BigInteger(publickeyMod, 16);
+        BigInteger exp = new BigInteger(publickeyExp, 16);
         String encryptedPassword = null;
 
         try {
@@ -33,7 +33,7 @@ public class RSAEncrypt {
             Cipher rsa = Cipher.getInstance("RSA");
             rsa.init(Cipher.ENCRYPT_MODE, publicKey);
 
-            byte[] cipherText = rsa.doFinal(PASSWORD.getBytes());
+            byte[] cipherText = rsa.doFinal(password.getBytes());
 
             encryptedPassword = Base64.getEncoder().encodeToString(cipherText);
 

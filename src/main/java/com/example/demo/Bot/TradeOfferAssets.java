@@ -16,7 +16,6 @@ public class TradeOfferAssets {
 
     public static JsonObject  tradableSkinsToJson (List<Skins> bot,List<Skins> user)
     {
-
         JsonObject jsonTradeOffer = new JsonObject();
         jsonTradeOffer.addProperty("newversion" ,true);
         jsonTradeOffer.addProperty("version",2);
@@ -26,7 +25,7 @@ public class TradeOfferAssets {
         return jsonTradeOffer;
     }
 
-    public static JsonObject makePartOfAssets(List<Skins> skin)
+    private static JsonObject makePartOfAssets(List<Skins> skin)
     {
         if (skin!=null) {
 

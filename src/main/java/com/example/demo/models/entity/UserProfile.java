@@ -5,6 +5,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
@@ -15,7 +16,7 @@ public class UserProfile implements UserDetails {
     @Id
     private String id;
     private String name;
-    private float balance;
+    private BigDecimal balance;
     private String partnerID;
     private String tradeToken;
     private String smallAvatarUrl;
@@ -107,11 +108,11 @@ public class UserProfile implements UserDetails {
         this.name = name;
     }
 
-    public float getBalance() {
+    public BigDecimal  getBalance() {
         return balance;
     }
 
-    public void setBalance(float balance) {
+    public void setBalance(BigDecimal  balance) {
         this.balance = balance;
     }
 

@@ -1,6 +1,6 @@
 package com.example.demo.Bot;
 
-import com.example.demo.Bot.Utils.HmacSHA1_Handler;
+import com.example.demo.Bot.Utils.HmacSHA1Handler;
 import com.example.demo.Bot.Utils.TimeAligner;
 
 import java.io.IOException;
@@ -68,7 +68,7 @@ public class SteamGuardAccount {
             time >>= 8;
         }
 
-        byte[] hashedData = HmacSHA1_Handler.calculateHMACSHA1(timeArray, sharedSecretArray);
+        byte[] hashedData = HmacSHA1Handler.calculateHMACSHA1(timeArray, sharedSecretArray);
 
         byte[] codeArray = new byte[5];
         try {

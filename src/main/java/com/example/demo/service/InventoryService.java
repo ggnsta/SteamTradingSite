@@ -16,13 +16,6 @@ public class InventoryService {
     private static final JsonParser jsonParser = new JsonParser();
     private final SkinsRepository skinsRepository;
 
-    //QUALITIES
-    private final int FACTORY_NEW = 1;
-    private final int MINIMAL_WEAR = 2;
-    private final int FIELD_TESTED = 3;
-    private final int WELL_WORN = 4;
-    private final int BATTLE_SCARED = 5;
-
     private String[] QUALITIES = new String[]{
             "(Factory New)",
             "(Minimal Wear)",
@@ -37,7 +30,7 @@ public class InventoryService {
         this.skinsRepository = skinsRepository;
     }
 
-    public JsonObject requestInventory(String steamID)
+    private JsonObject requestInventory(String steamID)
     {
         String reqUrl = url.replace("%username", steamID);
         HTTPClientGame httpClientGame = new HTTPClientGame(reqUrl);
@@ -49,7 +42,7 @@ public class InventoryService {
         else throw new NullPointerException();
     }
 
-    public List<Skins> parseJsonToSkins(UserProfile user)
+    private List<Skins> parseJsonToSkins(UserProfile user)
     {
         JsonObject skinsJsonObject = requestInventory(user.getId());
         JsonArray skinDesctiptionJson = skinsJsonObject.getAsJsonArray("descriptions");
@@ -116,7 +109,7 @@ public class InventoryService {
         return skinsList;
     }
 
-    public int searchJsonDescriptionForSkin(JsonArray array, String searchValue){
+    private int searchJsonDescriptionForSkin(JsonArray array, String searchValue){
 
         for (int i = 0; i < array.size(); i++) {
             JsonObject obj= null;

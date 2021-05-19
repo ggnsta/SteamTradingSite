@@ -57,7 +57,7 @@ public class MainController {
 
 
     @RequestMapping("/search")
-    public String huevo (Model model)
+    public String test (Model model)
     {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         UserDetails userDetail = (UserDetails) authentication .getPrincipal();

@@ -6,7 +6,6 @@ import java.util.Date;
 
 public class TimeStampHandler {
 
-    public static final long OneHour = 3600;
 
     /**
      * Get current system time in Epoch or Unix Timestamp
