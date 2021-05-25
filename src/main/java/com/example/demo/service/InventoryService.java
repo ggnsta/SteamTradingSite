@@ -125,7 +125,7 @@ public class InventoryService {
         }
         return -1;
     }
-
+/*
     public String calculateInventoryCost (List<Skins> userSkins)
     {
         double cost=0;
@@ -135,5 +135,5 @@ public class InventoryService {
         }
         return  String.valueOf(cost);
     }
-
+*/
 }

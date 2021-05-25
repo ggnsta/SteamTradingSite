@@ -15,8 +15,8 @@ public class SkinPrice {
     private Double medianPrice;
     private Double lowestPrice;
     private String currency;
-    @OneToMany(targetEntity=Skins.class, mappedBy="skinPrice",cascade=CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<Skins> skin = new ArrayList<>();
+   // @OneToMany(targetEntity=Skins.class, mappedBy="skinPrice",cascade=CascadeType.ALL, fetch = FetchType.LAZY)
+  //  private List<Skins> skin = new ArrayList<>();
 
     public String getMarketHashName() {
         return marketHashName;
@@ -25,7 +25,7 @@ public class SkinPrice {
     public void setMarketHashName(String marketHashName) {
         this.marketHashName = marketHashName;
     }
-
+/*
     public List<Skins> getSkin() {
         return skin;
     }
@@ -33,7 +33,7 @@ public class SkinPrice {
     public void setSkin(List<Skins> skin) {
         this.skin = skin;
     }
-
+*/
     public Double getMedianPrice() {
         return medianPrice;
     }

@@ -143,7 +143,7 @@ public class MainController {
         UserProfile user2;
         user2=usersOptional.orElse(usersOptional.get());
         inventoryService.updateUserSkinsDatabase(user2);
-        System.out.println(inventoryService.calculateInventoryCost(user2.getSkins()));
+       // System.out.println(inventoryService.calculateInventoryCost(user2.getSkins()));
         List <Skins> skinsList = new ArrayList<Skins>();
         skinsList=user2.getSkins();
         model.addAttribute("skinsList", skinsList);

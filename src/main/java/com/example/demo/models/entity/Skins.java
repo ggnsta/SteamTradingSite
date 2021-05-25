@@ -21,10 +21,10 @@ public class Skins {
     private String quality;
     @ManyToOne(fetch = FetchType.LAZY)
     private UserProfile userProfile; //id
-    @ManyToOne
-    @JoinColumn (name="marketHashName",referencedColumnName = "market_hash_name",insertable = false, updatable = false, nullable = true)
-    private SkinPrice skinPrice;
-
+  //  @ManyToOne
+  //  @JoinColumn (name="marketHashName",referencedColumnName = "market_hash_name",insertable = false, updatable = false, nullable = true)
+  //  private SkinPrice skinPrice;
+/*
     public SkinPrice getSkinPrice() {
         return skinPrice;
     }
@@ -32,7 +32,7 @@ public class Skins {
     public void setSkinPrice(SkinPrice skinPrice) {
         this.skinPrice = skinPrice;
     }
-
+*/
     public void setMarketable(int marketable) {
         this.marketable = marketable;
     }
