@@ -1,16 +1,21 @@
 package com.example.demo.Bot;
 
+import com.example.demo.Bot.Utils.Confirmation;
 import com.example.demo.Bot.Utils.HmacSHA1Handler;
 import com.example.demo.Bot.Utils.TimeAligner;
+import com.example.demo.utls.EndPoints;
+import com.example.demo.utls.HTTPClientGame;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
-import java.util.Base64;
-import java.util.Map;
+import java.util.*;
 
 public class SteamGuardAccount {
 
@@ -80,11 +85,129 @@ public class SteamGuardAccount {
                 codePoint /= steamGuardCodeTranslations.length;
             }
         }
-        catch (Exception e) { //Not the best catcher but should work.
+        catch (Exception e) {
             return null;
         }
         return new String(codeArray, StandardCharsets.UTF_8);
     }
 
+
+    public List<Confirmation> fetchConfirmations()
+    {
+        String url = generateConfirmationURL("conf");
+
+
+        Map<String, String> headers = new HashMap<>();
+        headers.put("Cookie", botInfo.getCookies());
+        headers.put("Referer", EndPoints.COMMUNITY_BASE);
+        headers.put("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
+        headers.put("User-Agent", "Mozilla/5.0 (Linux; U; Android 4.1.1; en-us; Google Nexus 4 - 4.1.1 - API 16 - 768x1280 Build/JRO03S) AppleWebKit/534.30 (KHTML, like Gecko) Version/4.0 Mobile Safari/534.30");
+        headers.put("Accept", "text/javascript, text/html, application/xml, text/xml, */*");
+        headers.put("Origin", "https://steamcommunity.com");
+
+
+        HttpRequest request = HTTPClientGame.build(url, headers, HTTPClientGame.RequestType.POST, "");
+        HttpResponse<String> response=null;
+        try {
+           response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        }catch (Exception ex)
+        {
+            ex.printStackTrace();
+        }
+        if(response.statusCode() == 200) {
+          System.out.println("Confirmation Request Fetched Successfully.");
+        }
+
+        return null;
+
+    }
+    private String generateConfirmationURL(String tag)
+    {
+        String endpoint = EndPoints.COMMUNITY_BASE + "/mobileconf/conf?";
+        String queryString = generateConfirmationQueryParams(tag);
+        return endpoint + queryString;
+    }
+
+    private String generateConfirmationQueryParams(String tag)
+    {
+        if(Objects.equals(botInfo.deviceID, null))
+            throw new IllegalArgumentException("Device ID is not present(null)");
+
+        Map<String, String> queryParams = generateConfirmationQueryParamsAsNVC(tag);
+
+        return "p=" + queryParams.get("p")
+                + "&a=" + queryParams.get("a")
+                + "&k=" + queryParams.get("k")
+                + "&t=" + queryParams.get("t")
+                + "&m=android&tag=" + queryParams.get("tag");
+    }
+    private Map<String, String> generateConfirmationQueryParamsAsNVC(String tag) {
+        try {
+            if (Objects.equals(botInfo.deviceID, null))
+                throw new IllegalArgumentException("Device ID is not present(null)");
+
+            Long time = TimeAligner.getSteamTime(client);
+
+            Map<String, String> ret = new HashMap<>();
+            ret.put("p", botInfo.deviceID);
+            ret.put("a", "76561199129663400"); //----Check
+            ret.put("k", generateConfirmationHashForTime(time, tag));
+            ret.put("t", time.toString());
+            ret.put("m", "android");
+            ret.put("tag", tag);
+
+            return ret;
+        }catch (Exception ex){
+            ex.printStackTrace();
+        }
+        return null;
+    }
+    private String generateConfirmationHashForTime(long time, String tag)
+            throws UnsupportedEncodingException {
+
+        byte[] decode = Base64.getDecoder().decode(botInfo.identitySecret);
+
+        int n2 = 8;
+        if (tag != null) {
+            if (tag.length() > 32) {
+                n2 = 8 + 32;
+            }
+            else {
+                n2 = 8 + tag.length();
+            }
+        }
+        byte[] array = new byte[n2];
+        int n3 = 8;
+        while (true) {
+            int n4 = n3 - 1;
+            if (n3 <= 0) {
+                break;
+            }
+            array[n4] = (byte)time;
+            time >>= 8;
+            n3 = n4;
+        }
+        if (tag != null) {
+
+            byte[] copyArray = Arrays.copyOfRange(tag.getBytes(StandardCharsets.UTF_8), 0, n2-8);
+            for(int i = 0; i < copyArray.length; i++) {
+                array[i+8] = copyArray[i];
+            }
+        }
+
+        try {
+
+            byte[] hashedData = HmacSHA1Handler.calculateHMACSHA1(array,decode);
+
+            String encodedData = Base64.getEncoder().encodeToString(hashedData);
+
+            String hash = URLEncoder.encode(encodedData, StandardCharsets.UTF_8);
+            return hash;
+        }
+        catch (NoSuchAlgorithmException | InvalidKeyException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 
 }

@@ -15,7 +15,6 @@ import com.google.gson.JsonPrimitive;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
-import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
@@ -30,6 +29,7 @@ import org.springframework.stereotype.Component;
 import java.io.*;
 import java.math.BigInteger;
 import java.net.*;
+import java.net.http.HttpClient;
 import java.security.Timestamp;
 import java.time.LocalTime;
 import java.util.*;
@@ -47,7 +47,7 @@ public class BotManager {
     private final String sendUrl = "https://steamcommunity.com/tradeoffer/new/send";
     private BotDetails bd=new BotDetails();//
     private  String sessionID;
-    private String botLogin="qiqimc";
+    private String botLogin="qiqitrade";
 
     public void initializeBot () {
         BotDetails botDetails = botDetailsRepositorydr.findBotDetailsBySteamLogin(botLogin); // ищем в бд нужного бота;
@@ -101,28 +101,40 @@ public class BotManager {
         String response = httpClientGame.getAll();
         JsonObject responseJson = new Gson().fromJson(response, JsonObject.class);
         response = responseJson.getAsJsonObject("response").getAsJsonObject("offer").get("trade_offer_state").toString();
+        if (response!=null)
         return Integer.parseInt(response);
+        else return -1;
     }
 
-    public void sendTradeOffer(List<Skins> botSkins, List <Skins> userSkins, String partnerSteamID,String userTradeOfferAccessToken)
-    {
+    public void sendTradeOffer(List<Skins> botSkins, List <Skins> userSkins, UserProfile user){
         String securityTradeCode = generateTradeOfferMessage();
-        String tradeOfferId = tradeOfferRequest(botSkins,userSkins,partnerSteamID,userTradeOfferAccessToken,securityTradeCode);
-        createTradeOfferEntity(tradeOfferId,botLogin,partnerSteamID,securityTradeCode);
-    }
-    private String tradeOfferRequest(List<Skins> botSkins, List <Skins> userSkins, String partnerSteamID,String userTradeOfferAccessToken, String tradeOfferMessage)  {
+        String tradeOfferId = tradeOfferRequest(botSkins,userSkins,user,securityTradeCode);
+        if(tradeOfferId!=null)
+        {
+            SteamGuardAccount steamGuardAccount = new SteamGuardAccount(HttpClient.newBuilder().build(),botInfo);
+            steamGuardAccount.fetchConfirmations();
+            createTradeOfferEntity(tradeOfferId,botLogin,user.getId(),securityTradeCode);
 
+        }
+
+    }
+    private String tradeOfferRequest(List<Skins> botSkins, List <Skins> userSkins, UserProfile user, String tradeOfferMessage)  {
+
+        JsonObject tradeParams = new JsonObject();
+        tradeParams.addProperty("trade_offer_access_token", user.getTradeToken());
         Map<String, String> data = new HashMap<String, String>();
+
         data.put("sessionid", this.sessionID);
         data.put("serverid", "1");
-        data.put("partner", partnerSteamID);
+        data.put("partner", user.getId()); //steam id
         data.put("tradeoffermessage", tradeOfferMessage);
         data.put("json_tradeoffer", TradeOfferAssets.tradableSkinsToJson(botSkins,userSkins).toString());
-        data.put("trade_offer_create_params", userTradeOfferAccessToken);
+        data.put("trade_offer_create_params", tradeParams.toString());
         String requestBody = encodeRequestBody(data);
 
         String requestAdress= "https://steamcommunity.com/tradeoffer/new/send";
-        String refer = "https://steamcommunity.com/tradeoffer/new/?partner=&token=";
+        String refer = "https://steamcommunity.com/tradeoffer/new/?partner=%partner&token=%token";
+        refer=refer.replace("%partner", user.getPartnerID()).replace("%token",user.getTradeToken());
 
         try {
             CloseableHttpClient client = HttpClients.createDefault();

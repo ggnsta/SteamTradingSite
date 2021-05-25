@@ -55,7 +55,7 @@ public class InventoryService {
             userSkin.setClassID(skinAssetJson.get(i).getAsJsonObject().get("classid").getAsString());
             userSkin.setInstanceID(skinAssetJson.get(i).getAsJsonObject().get("instanceid").getAsString());
             int k = searchJsonDescriptionForSkin(skinDesctiptionJson,skinAssetJson.get(i).getAsJsonObject().get("classid").getAsString());
-            userSkin.setIconUrl(skinDesctiptionJson.get(k).getAsJsonObject().get("icon_url").getAsString());
+            userSkin.setIconUrl(skinDesctiptionJson.get(k).getAsJsonObject().get("icon_url").getAsString()+"/128x128f");
             userSkin.setMarketHashName(skinDesctiptionJson.get(k).getAsJsonObject().get("market_hash_name").getAsString());
             userSkin.setTradable(skinDesctiptionJson.get(k).getAsJsonObject().get("tradable").getAsInt());
             if(userSkin.getTradable()==0)continue;// если предмететом нельзя обмениваться, в бд он не вносится
@@ -63,7 +63,7 @@ public class InventoryService {
             userSkin.setQuality(defineSkinQuality(userSkin.getMarketHashName()));
             userSkin.setUserProfile(user);
 
-            userSkin.setSkinPrice(skinPriceService.requestOneSkinPrice(1,userSkin.getMarketHashName()));
+         //   userSkin.setSkinPrice(skinPriceService.requestOneSkinPrice(1,userSkin.getMarketHashName()));
 
             skinsToDB.add(userSkin);
         }
@@ -76,7 +76,7 @@ public class InventoryService {
         List<Skins> existSkins = getUserSkins(user); // скины, которые уже в бд
         List<Skins> actualSkins= parseJsonToSkins(user);
 
-        if(!existSkins.containsAll(actualSkins)|| !actualSkins.containsAll(existSkins))
+        if(!existSkins.containsAll(actualSkins))
         {
             List<Skins> skinsToDeleteFromDB = existSkins; // скины которые надо удалить из дб
             skinsToDeleteFromDB.removeAll(actualSkins);// из этого массива удаляем совпадения с актуальынми скинами, остаются только те которых уже нет в стиме

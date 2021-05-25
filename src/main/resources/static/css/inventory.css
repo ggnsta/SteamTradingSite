@@ -1,6 +1,6 @@
 *{padding: 0; margin: 0; box-sizing: border-box;}
 body{height: 900px;
-background-color: lightblue}
+  background-color: lightblue}
 header {
   text-align: center;
   width: 100%;
@@ -70,7 +70,7 @@ h3{
 }
 
 {
-box-sizing: border-box;
+  box-sizing: border-box;
 }
 
 body {
@@ -176,4 +176,3 @@ p {
 .header h1 {
   display: inline-block;
 }
-

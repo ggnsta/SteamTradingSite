@@ -33,7 +33,7 @@ public class TradeOfferAssets {
             JsonArray array = new JsonArray();
             for (int i = 0; i < skin.size(); i++) {
                 JsonObject obj = new JsonObject();
-                obj.addProperty("appid", 570);
+                obj.addProperty("appid", 730);
                 obj.addProperty("contextid", "2");
                 obj.addProperty("amount", "1");
                 obj.addProperty("assetid", skin.get(i).getAssetID());

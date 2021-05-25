@@ -1,0 +1,79 @@
+.sell-block {
+  margin-top: 20;
+  background-image: url(https://cdn.cloudflare.steamstatic.com/steamcommunity/public/images/items/730/ef7cb44d312df5038cba0f69a0901da427900645.jpg);
+}
+
+.block-title {
+  color: #2a2d33;
+  text-transform: uppercase;
+  text-align: center;
+  font-weight: 700;
+}
+
+.block-content {
+  background-color: #2a2d33;
+  box-shadow: 0 13px 49px 0 rgba(18,19,20,.59);
+  position: relative;
+  z-index: 11;
+  margin-top: -9px;
+  border-radius: 4px;
+  border-radius: 4px;
+}
+
+.wrap {
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 1200px;
+}
+
+.blocks {
+  width: 100%;
+  white-space: nowrap;
+}
+
+.inventory-top-conrols {
+  padding-top: 25px;
+  white-space: normal;
+}
+
+#userinventory {
+  grid-template-columns: 20% 20% 20% 20%;
+  white-space: normal;
+  display: grid;
+  grid-template-columns: 20% 20% 20% 20% 20%;
+  grid-template-rows: 150px 128px;
+  grid-row-gap: 17px;
+  overflow-x: hidden;
+  overflow-y: scroll;
+  height: 900px;
+  margin-top: 15px;
+  padding-bottom: 40px;
+  margin-bottom: 7px;
+  margin-left: -5px;
+  margin-right: -9px;
+  position: relative;
+}
+
+.right-block {
+  padding-left: 0;
+}
+
+.block {
+  width: 65%;
+  display: inline-block;
+  vertical-align: top;
+}
+
+.skin-wrapper {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.btn.btn-primary {
+}
+
+#tradeBtn {
+  width: 260px;
+  height: 90px;
+}
+

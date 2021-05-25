@@ -1,38 +1,28 @@
-<header th:fragment="header" xmlns:th="http://www.thymeleaf.org"
-        xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
-
-    <div class="header-content">
-
-        <div class="logo"><a href="#"><img src="#" th:src="@{/img/gamehub_logo_straight.png}" alt="GameHub logo"/></a>
-        </div>
-
-        <div class="header-nav">
-
-            <nav sec:authorize="isAuthenticated()">
-
-                <ul class="primary-nav">
-                    <li><a href="#" th:href="@{/groups}">Groups</a></li>
-                    <li><a href="#" th:href="@{/search/users}">Players</a></li>
-                    <li><a href="#">Contact Us</a></li>
-                </ul>
+<!DOCTYPE html>
+<head lang="en">
+    <meta charset="UTF-8"/>
+    <title>DBI Trades</title>
+    <link href="/css/header.css" rel="stylesheet">
+</head>
+<header th:fragment="header">
 
 
-                <nav sec:authorize="isAnonymous()">
-                    <ul class="member-actions">
-                        <form name="form" th:action="@{/login/openid}" method="post">
 
-                            <div id="openid_input_area">
-                                <input id="openid_identifier" name="openid_identifier" type="hidden"
-                                       value="http://steamcommunity.com/openid"/>
-                                <input id="openid_submit" type="image" th:src="@{/globalheader_logo.png}"/>
-                            </div>
+    <div class="headerName"><img src="./steam.svg"><p>Bsuir Trade Bot</p></div>
 
-                        </form>
-                    </ul>
-                </nav>
+    <div class="menu">
+        <ul class="navigation">
+            <li><a href="#">Магазин</a></li>
+            <li><a href="#">Продажа</a></li>
+            <li><div class="balance">
+                <div><p>Баланс<div id="balance">$ 0</div></p></div>
+                <button type="button">+</button>
+            </div>
 
-        </div>
-
+            <li><img  th:src="${mediumImgURL}"></li>
+        </ul>
     </div>
+
+
 
 </header>

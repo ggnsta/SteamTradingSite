@@ -1,5 +1,7 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org"   xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -8,21 +10,9 @@
     <title>Trade Bot</title>
 </head>
 <body>
-<header>
-    <div class="headerName"><img src="./steam.svg"><p>Bsuir Trade Bot</p></div>
-    <div class="menu">
-        <ul class="navigation">
-            <li><a href="#">Магазин</a></li>
-            <li><a href="#">Продажа</a></li>
-            <li><div class="balance">
-                <div><p>Баланс<div id="balance">$ 0</div></p></div>
-                <button type="button">+</button>
-            </div>
-            <li><img src="./fd448cada3660cf05251a51198a383dbd42f7e9f_full.jpg"></li>
-        </ul>
+<div th:insert="fragments/header.html :: header"></div>
 
-    </div>
-</header>
+
 <section class="mainPage">
     <div class="center">
         <h1>Личная информация</h1>

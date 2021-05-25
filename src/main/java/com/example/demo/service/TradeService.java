@@ -5,6 +5,7 @@ import com.example.demo.Bot.BotManager;
 import com.example.demo.models.entity.BotDetails;
 import com.example.demo.models.entity.Skins;
 import com.example.demo.models.entity.TradeOffer;
+import com.example.demo.models.entity.UserProfile;
 import com.example.demo.models.repository.BotDetailsRepository;
 import com.example.demo.models.repository.TradeOfferRepository;
 import com.example.demo.models.repository.UserProfileRepository;
@@ -75,22 +76,15 @@ public class TradeService implements Runnable{
             ex.printStackTrace();
         }
     }
-    @PostConstruct // ?
-    public void main()
+    @PostConstruct
+    public void startTradeService()
     {
         botManager.initializeBot();
     }
 
-    public void sendTradeOffer()
-    {
-        Skins skin = new Skins();
-        skin.setAssetID("6846332964");
-        List<Skins> skinlist = new ArrayList<>();
-        skinlist.add(skin);
-        List<Skins> skinlist2 = new ArrayList<>();
-        JsonObject tradeParams = new JsonObject();
-        tradeParams.addProperty("trade_offer_access_token",userProfileRepository.findByName("Sam").getTradeToken());
-        botManager.sendTradeOffer(skinlist,skinlist2,userProfileRepository.findByName("Sam").getId(),tradeParams.toString());
+    public void sendTradeOffer(List<Skins> botSkins, List<Skins> userSkins, UserProfile user) {
+
+        botManager.sendTradeOffer(botSkins,userSkins,user);
 
     }
 

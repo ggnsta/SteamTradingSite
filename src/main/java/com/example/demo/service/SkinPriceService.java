@@ -1,29 +1,19 @@
 package com.example.demo.service;
 
 import com.example.demo.models.entity.SkinPrice;
-import com.example.demo.models.entity.Skins;
+
 import com.example.demo.models.repository.SkinPriceRepository;
 import com.example.demo.utls.HTTPClientGame;
 import com.example.demo.utls.MyJsonParser;
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
-import org.apache.http.util.EntityUtils;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
 import java.net.URLEncoder;
 import java.util.ArrayList;
-import java.util.HashMap;
+
 import java.util.List;
-import java.util.Map;
+
 
 @Service
 public class SkinPriceService {
@@ -44,12 +34,13 @@ public class SkinPriceService {
             response = httpClientGame.getAll();
         }catch (Exception ex){
             //вот тут что-то помягче
-            ex.printStackTrace();
+            System.out.println(ex);
         }
         MyJsonParser parser = new MyJsonParser();
-        priceInfo=parser.parsePriceOwerview(response);
-        if(priceInfo!=null)
+        if(!response.equals("null"))
         {
+        priceInfo=parser.parsePriceOwerview(response);
+
             SkinPrice skinPrice = new SkinPrice();
             skinPrice.setMarketHashName(marketHashName);
             skinPrice.setLowestPrice(Double.parseDouble(priceInfo.get(0).substring(1)));
