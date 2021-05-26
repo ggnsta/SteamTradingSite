@@ -18,6 +18,7 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicHeader;
 import org.openid4java.server.ServerException;
+import org.springframework.web.reactive.function.client.WebClient;
 
 public class HTTPClientGame {
     private HttpClient client;
@@ -29,12 +30,18 @@ public class HTTPClientGame {
         client = HttpClientBuilder.create().build();
         this.URIl = URL;
     }
+    public HTTPClientGame()
+    {
+
+    }
 
     public HTTPClientGame(String URL, List<Header> headers)
     {
         this.URIl = URL;
         this.headers = headers;
     }
+
+
 
     //EXCEP SLOVIT
     public String getAll(){
@@ -56,6 +63,27 @@ public class HTTPClientGame {
           return null;
         }
     }
+
+    public String getAllproxy(){
+        try {
+            client = HttpClientBuilder.create().build();
+            HttpGet get = new HttpGet(URIl);
+            for(int i=0;i<headers.size();i++)
+            {
+                get.addHeader(headers.get(i));
+            }
+
+            HttpResponse response = client.execute(get);
+
+            throwServerException(response, 200);
+            return inputStreamToString(response.getEntity().getContent());
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
 
     private String inputStreamToString(InputStream is) {
 
@@ -106,6 +134,10 @@ public class HTTPClientGame {
         POST,
     }
 
+    private void test ()
+    {
+        WebClient client = WebClient.create();
+    }
 
     private void throwServerException(HttpResponse response, int goodCode) throws ServerException {
         if (response.getStatusLine().getStatusCode() == goodCode) return;
@@ -117,8 +149,9 @@ public class HTTPClientGame {
                  throw new ServerException("There is no content", 204);
             case 409:
                  throw new ServerException("The item already exists", 409);
+            case 429: return;
             default:
-                //  throw new ServerException("Server error occurred!", response.getStatusLine().getStatusCode());
+                  throw new ServerException("Server error occurred!", response.getStatusLine().getStatusCode());
         }
     }
 

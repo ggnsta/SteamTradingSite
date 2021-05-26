@@ -142,9 +142,12 @@ public class MainController {
         Optional<UserProfile> usersOptional = userRepository.findById(openIdUrl);
         UserProfile user2;
         user2=usersOptional.orElse(usersOptional.get());
-        inventoryService.updateUserSkinsDatabase(user2);
-       // System.out.println(inventoryService.calculateInventoryCost(user2.getSkins()));
-        List <Skins> skinsList = new ArrayList<Skins>();
+        long m = System.currentTimeMillis();
+        inventoryService.parseJsonToSkins(user2);
+        System.out.println((double) (System.currentTimeMillis() - m));
+
+       //System.out.println(inventoryService.calculateInventoryCost(user2.getSkins()));
+        List <Skins> skinsList;
         skinsList=user2.getSkins();
         model.addAttribute("skinsList", skinsList);
         return "inventory";

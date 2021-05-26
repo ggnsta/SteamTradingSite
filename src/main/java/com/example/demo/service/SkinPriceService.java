@@ -6,6 +6,12 @@ import com.example.demo.models.repository.SkinPriceRepository;
 import com.example.demo.utls.HTTPClientGame;
 import com.example.demo.utls.MyJsonParser;
 
+import org.apache.http.HttpHost;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.conn.params.ConnRoutePNames;
+import org.apache.http.impl.client.DefaultHttpClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +28,23 @@ public class SkinPriceService {
     private SkinPriceRepository skinPriceRepository;
     private static final  String marketURL = "https://steamcommunity.com/market/priceoverview/?appid=%appId&currency=%currency&market_hash_name=%marketHashName";
 
+    public SkinPrice fake ()
+    {
+        SkinPrice sp = new SkinPrice();
+        skinPriceRepository.save(sp);
+        return sp;
+    }
+
+    public void test2()
+    {
+        for(int i = 0; i<150;i++)
+        {
+            HTTPClientGame  httpClientGame = new HTTPClientGame("https://steamcommunity.com/market/listings/730/Snakebite%20Case");
+            String response = httpClientGame.getAll();
+            System.out.println(i);
+        }
+
+    }
 
     public SkinPrice requestOneSkinPrice (int currency, String marketHashName)
     {
@@ -32,10 +55,7 @@ public class SkinPriceService {
             String url = marketURL.replace("%marketHashName", encodedHashName).replace("%appId", String.valueOf(730)).replace("%currency", String.valueOf(currency));
             HTTPClientGame httpClientGame = new HTTPClientGame(url);
             response = httpClientGame.getAll();
-        }catch (Exception ex){
-            //вот тут что-то помягче
-            System.out.println(ex);
-        }
+        }catch (Exception ex){ ex.printStackTrace();}
         MyJsonParser parser = new MyJsonParser();
         if(!response.equals("null"))
         {
@@ -51,7 +71,13 @@ public class SkinPriceService {
             return skinPrice;
 
         }
-        else return null;
+        else {
+            SkinPrice skinPrice = new SkinPrice();
+            skinPrice.setMarketHashName(marketHashName);
+            skinPriceRepository.save(skinPrice);
+            return skinPrice;
+
+        }
 
     }
 }

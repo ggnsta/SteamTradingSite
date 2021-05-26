@@ -3,10 +3,11 @@ package com.example.demo.models.entity;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Objects;
 
 @Entity
-public class Skins {
+public class Skins implements Serializable {
     @Id
     @GeneratedValue(generator="system-uuid")
     @GenericGenerator(name="system-uuid", strategy = "uuid")
@@ -21,10 +22,10 @@ public class Skins {
     private String quality;
     @ManyToOne(fetch = FetchType.LAZY)
     private UserProfile userProfile; //id
-  //  @ManyToOne
-  //  @JoinColumn (name="marketHashName",referencedColumnName = "market_hash_name",insertable = false, updatable = false, nullable = true)
-  //  private SkinPrice skinPrice;
-/*
+    @ManyToOne(targetEntity = SkinPrice.class,cascade = CascadeType.ALL)
+    @JoinColumn (name="fk_marketHashName",referencedColumnName = "market_hash_name",insertable = false, updatable = false, nullable = true)
+    private SkinPrice skinPrice;
+
     public SkinPrice getSkinPrice() {
         return skinPrice;
     }
@@ -32,7 +33,7 @@ public class Skins {
     public void setSkinPrice(SkinPrice skinPrice) {
         this.skinPrice = skinPrice;
     }
-*/
+
     public void setMarketable(int marketable) {
         this.marketable = marketable;
     }
@@ -56,7 +57,7 @@ public class Skins {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (!(o instanceof Skins)) return false;
         Skins skins = (Skins) o;
         return Objects.equals(assetID, skins.assetID) &&
                 Objects.equals(classID, skins.classID) &&
