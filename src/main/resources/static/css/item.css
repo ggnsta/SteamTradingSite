@@ -40,8 +40,8 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  width: 99%;
   min-height: 7rem;
+  width: 155px;
   border-radius: 0.5rem;
   border: 2px solid #b5bfd9;
   background-color: #c8baba;
@@ -49,6 +49,7 @@
   transition: 0.15s ease;
   cursor: pointer;
   position: relative;
+  height: 155px;
 }
 
 .skin-tile:before {
@@ -84,6 +85,8 @@
 .skin-icon {
   transition: 0.375s ease;
   color: #494949;
+  max-width: 128px;
+  max-height: 96px;
 }
 
 .skin-icon svg {

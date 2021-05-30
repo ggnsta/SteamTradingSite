@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en"  xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>Продажа ваших предметов</title>
+    <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Bitter:400,700">
+    <link rel="stylesheet" href="/css/item.css">
+    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+
+</head>
+
+<body>
+<div class="header"></div>
+<div class="sell-block">
+
+    <h2 class="display-4 block-title">Продать предметы</h2>
+    <div class="block-content wrap">
+        <div class="inner">
+            <div class="blocks">
+                <div class="block">
+                    <div class="inventory-top-conrols"></div>
+                    <div id="userinventory" class="inventory">
+                        <div class="skin" th:each="skin : ${skinsList}">
+                            <label class="skin-wrapper">
+                                <input type="checkbox"  name="skinid"  th:value="${skin.id}" class="checkbox-input">
+                                <span class="skin-tile">
+									<img class="skin-icon"  th:src="@{{image}(image=${skin.iconUrl})}"></img>
+									<span class="skin-label" th:text="${skin.marketHashName}"></span>
+								</span>
+                            </label>
+                        </div>
+                    </div>
+                    <tr>
+                        <td colspan="2"><input type="submit" value="Add"/></td>
+                    </tr>
+
+                </div><button class="btn btn-primary" id="tradeBtn" type="button" onclick="sendSelectedItems()"></button>
+                <div class="block">
+                    <div class="right-block">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function sendSelectedItems() {
+        var json = JSON.stringify(getCheckedCheckBoxes());
+        var xhr = new XMLHttpRequest();
+        xhr.open("POST", '/inventory/add', true)
+        xhr.setRequestHeader('Content-type', 'application/json; charset=utf-8');
+        xhr.send(json)
+
+    }
+</script>
+
+<script th:inline="javascript">
+    function getCheckedCheckBoxes() {
+        var checkboxes = document.getElementsByClassName('checkbox-input');
+        var checkboxesChecked = [];
+        for (var index = 0; index < checkboxes.length; index++) {
+            if (checkboxes[index].checked) {
+                checkboxesChecked.push(checkboxes[index].value);
+                //var def = [checkboxes[index].value];
+
+            }
+        }
+
+        console.log( checkboxesChecked) ;
+        return checkboxesChecked;
+    }
+</script>
+</body>
+
+</html>

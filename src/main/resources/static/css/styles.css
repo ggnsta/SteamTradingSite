@@ -34,6 +34,7 @@
 .inventory-top-conrols {
   padding-top: 25px;
   white-space: normal;
+  box-shadow: 0 0 3px black;
 }
 
 #userinventory {
@@ -45,23 +46,40 @@
   grid-row-gap: 17px;
   overflow-x: hidden;
   overflow-y: scroll;
-  height: 900px;
+  height: 520px;
   margin-top: 15px;
   padding-bottom: 40px;
   margin-bottom: 7px;
-  margin-left: -5px;
   margin-right: -9px;
+  box-shadow: 0 0 3px black;
   position: relative;
 }
 
 .right-block {
   padding-left: 0;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+  -ms-flex-flow: row wrap;
+  flex-flow: row wrap;
+  -webkit-box-pack: justify;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+  padding-top: 25px;
+  padding-bottom: 25px;
+  padding-right: 25px;
+  height: 250px;
+  width: 390px;
+  margin-left: 20px;
 }
 
 .block {
-  width: 65%;
+  width: 66%;
   display: inline-block;
   vertical-align: top;
+  box-shadow: 0 0 3px black;
 }
 
 .skin-wrapper {
@@ -73,7 +91,22 @@
 }
 
 #tradeBtn {
-  width: 260px;
-  height: 90px;
+  display: block;
+  width: 100%;
+  padding: 22px 20px;
+  margin: 0 auto 10px;
+  font-size: 22px;
+  line-height: 1;
+  font-weight: 700;
+  text-transform: uppercase;
+  text-align: center;
+  background-color: #0de5a0;
+  border: 0;
+  border-radius: 4px;
+  -webkit-box-shadow: 0 2px 2px 0 rgba(0,0,0,.25);
+  box-shadow: 0 2px 2px 0 rgba(0,0,0,.25);
+  color: #1e2736;
+  cursor: pointer;
+  margin-right: 50px;
 }
 

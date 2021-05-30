@@ -4,44 +4,64 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-	<title>Продажа ваших предметов</title>
-	<link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
+	<title>Продаж предметов</title>
 	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Bitter:400,700">
+	<link rel="stylesheet" href="/css/Header-Dark.css">
 	<link rel="stylesheet" href="/css/item.css">
 	<link rel="stylesheet" href="/css/styles.css">
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
-
+	<link href="/css/header.css" rel="stylesheet">
 </head>
 
-<body>
-<div class="header"></div>
-<div class="sell-block">
+<header>
 
+	<div class="headerName"><img src="/pics/steamLogo.svg"><p>Bsuir Trade Bot</p></div>
+
+	<div class="menu">
+		<ul class="navigation">
+			<li><a href="#">Магазин</a></li>
+			<li><a href="#">Продажа</a></li>
+			<li><div class="balance">
+				<div><p>Баланс<div id="balance">$ 0</div></p></div>
+				<button type="button">+</button>
+			</div>
+
+			<li><img  th:src="${mediumImgURL}"></li>
+		</ul>
+	</div>
+
+</header>
+
+<body>
+
+<div class="sell-block">
 	<h2 class="display-4 block-title">Продать предметы</h2>
 	<div class="block-content wrap">
 		<div class="inner">
 			<div class="blocks">
 				<div class="block">
-					<div class="inventory-top-conrols"></div>
+					<div class="inventory-top-conrols">
+						<div class="search"><input type="text" id="inv_search" placeholder="поиск по скинам"></div>
+					</div>
 					<div id="userinventory" class="inventory">
 						<div class="skin" th:each="skin : ${skinsList}">
 							<label class="skin-wrapper">
-								<input type="checkbox"  name="skinid"  th:value="${skin.id}" class="checkbox-input">
-								<span class="skin-tile">
-									<img class="skin-icon"  th:src="@{{image}(image=${skin.iconUrl})}"></img>
-									<span class="skin-label" th:text="${skin.marketHashName}"></span>
+								<input type="checkbox" name="skinid"  th:value="${skin.id}" class="checkbox-input">
+								<span class="skin-tile">ЦЕНА<img class="skin-icon"  th:src="@{{image}(image=${skin.iconUrl})}"></img>
+								<span class="skin-label" th:text="${skin.marketHashName}">></span>
 								</span>
 							</label>
 						</div>
-					</div>
-						<tr>
-							<td colspan="2"><input type="submit" value="Add"/></td>
-						</tr>
 
-				</div><button class="btn btn-primary" id="tradeBtn" type="button" onclick="sendSelectedItems()"></button>
+
+					</div>
+					<div class="bottom-controll"></div>
+				</div>
 				<div class="block">
 					<div class="right-block">
-
+						<div class="price container">
+							<p class="cash_offer_price">0.00$</p>
+						</div>
+						<div id="button-block"><button class="btn btn-primary" id="tradeBtn" type="button" onclick="sendSelectedItems()">продать</button></div>
 					</div>
 				</div>
 			</div>
@@ -58,7 +78,7 @@
 		xhr.send(json)
 
 	}
-	</script>
+</script>
 
 <script th:inline="javascript">
 	function getCheckedCheckBoxes() {

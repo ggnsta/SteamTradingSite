@@ -76,7 +76,7 @@ public class TradeService implements Runnable{
             ex.printStackTrace();
         }
     }
-    @PostConstruct
+
     public void startTradeService()
     {
         botManager.initializeBot();
