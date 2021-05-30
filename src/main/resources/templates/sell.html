@@ -73,7 +73,7 @@
 	function sendSelectedItems() {
 		var json = JSON.stringify(getCheckedCheckBoxes());
 		var xhr = new XMLHttpRequest();
-		xhr.open("POST", '/inventory/add', true)
+		xhr.open("POST", '/sell/add', true)
 		xhr.setRequestHeader('Content-type', 'application/json; charset=utf-8');
 		xhr.send(json)
 

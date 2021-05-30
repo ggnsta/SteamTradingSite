@@ -9,18 +9,14 @@ import java.util.List;
 @Entity
 public class BotDetails {
     @Id
-    @GeneratedValue(generator="system-uuid")
-    @GenericGenerator(name="system-uuid", strategy = "uuid")
     private String id;
     private String steamLogin;
-    private String tradeID;
-    private String tradeToken;
     private String SharedSecret;
     private String IdentitySecret;
     private String DeviceID;
     private String password;
     private String cookies;
-    private String transferParameters;
+    private String apiKey;
     @OneToMany(mappedBy = "botLogin", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<TradeOffer> tradeOffers;
 
@@ -40,13 +36,7 @@ public class BotDetails {
         this.cookies = cookies;
     }
 
-    public String getTransferParameters() {
-        return transferParameters;
-    }
 
-    public void setTransferParameters(String transferParameters) {
-        this.transferParameters = transferParameters;
-    }
 
     public String getPassword() {
         return password;
@@ -96,19 +86,11 @@ public class BotDetails {
         DeviceID = deviceID;
     }
 
-    public String getTradeID() {
-        return tradeID;
+    public String getApiKey() {
+        return apiKey;
     }
 
-    public void setTradeID(String tradeID) {
-        this.tradeID = tradeID;
-    }
-
-    public String getTradeToken() {
-        return tradeToken;
-    }
-
-    public void setTradeToken(String tradeToken) {
-        this.tradeToken = tradeToken;
+    public void setApiKey(String apiKey) {
+        this.apiKey = apiKey;
     }
 }

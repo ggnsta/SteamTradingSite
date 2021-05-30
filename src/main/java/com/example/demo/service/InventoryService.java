@@ -55,6 +55,8 @@ public class InventoryService {
         List <Skins> skinsToDB= new ArrayList<>();
         for (int i = 0; i<skinDesctiptionJson.size();i++)
         {
+            int tradable = skinDesctiptionJson.get(i).getAsJsonObject().get("tradable").getAsInt();
+            if(tradable==0)continue;
             String marketHashName = skinDesctiptionJson.get(i).getAsJsonObject().get("market_hash_name").getAsString();
             skinPriceService.requestOneSkinPrice(1,marketHashName);
         }
@@ -79,10 +81,9 @@ public class InventoryService {
 
             userSkin.setSkinPrice(skinPrice);
             skinPrice.addSkins(userSkin);
-            skinsRepository.save(userSkin);
+            skinsToDB.add(userSkin);
+            //skinsRepository.save(userSkin);
 
-
-            //skinsToDB.add(userSkin);
         }
         return skinsToDB;
     }
@@ -93,7 +94,7 @@ public class InventoryService {
         List<Skins> existSkins = getUserSkins(user); // скины, которые уже в бд
         List<Skins> actualSkins= parseJsonToSkins(user);
 
-        if(!existSkins.containsAll(actualSkins)|| !actualSkins.containsAll(existSkins))
+        if(!existSkins.containsAll(actualSkins) || !actualSkins.containsAll(existSkins))
         {
             List<Skins> skinsToDeleteFromDB = existSkins; // скины которые надо удалить из дб
             skinsToDeleteFromDB.removeAll(actualSkins);// из этого массива удаляем совпадения с актуальынми скинами, остаются только те которых уже нет в стиме

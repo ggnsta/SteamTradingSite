@@ -150,7 +150,7 @@ public class SteamGuardAccount {
 
             Map<String, String> ret = new HashMap<>();
             ret.put("p", botInfo.deviceID);
-            ret.put("a", "76561199129663400"); //----Check
+            ret.put("a", botInfo.steamID); //----Check
             ret.put("k", generateConfirmationHashForTime(time, tag));
             ret.put("t", time.toString());
             ret.put("m", "android");

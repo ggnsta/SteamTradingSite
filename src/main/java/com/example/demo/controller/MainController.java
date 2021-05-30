@@ -133,27 +133,26 @@ public class MainController {
     }
 
 
-    @RequestMapping("/inventory")
+    @RequestMapping("/sell")
     public String getInventory(Model model)
     {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         UserDetails userDetail = (UserDetails) authentication .getPrincipal();
         String openIdUrl = ((UserProfile) authentication .getPrincipal()).getId();
         Optional<UserProfile> usersOptional = userRepository.findById(openIdUrl);
-        UserProfile user2;
-        user2=usersOptional.orElse(usersOptional.get());
+        UserProfile user;
+        user=usersOptional.orElse(usersOptional.get());
         long m = System.currentTimeMillis();
-        inventoryService.parseJsonToSkins(user2);
+        inventoryService.updateUserSkinsDatabase(user);
         System.out.println((double) (System.currentTimeMillis() - m));
 
-       //System.out.println(inventoryService.calculateInventoryCost(user2.getSkins()));
         List <Skins> skinsList;
-        skinsList=user2.getSkins();
+        skinsList=user.getSkins();
         model.addAttribute("skinsList", skinsList);
-        return "inventory";
+        return "sell";
     }
 
-    @PostMapping("/inventory/add")
+    @PostMapping("/sell/add")
     public String getSkinsListToTrade(@RequestBody List<String> selectedSkinId)  {
         List<Skins> skinsToTrade= new ArrayList<Skins>();
         for (int i =0; i<selectedSkinId.size();i++)
@@ -162,6 +161,7 @@ public class MainController {
             skinsToTrade.add(skinsOptional.orElse(skinsOptional.get()));
         }
 
+        tradeService.startTradeService();
         tradeService.sendTradeOffer(new ArrayList<Skins>(),skinsToTrade,user);
 
         return "redirect:/profile-info";

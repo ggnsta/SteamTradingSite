@@ -57,7 +57,7 @@ public class SkinPriceService {
             response = httpClientGame.getAll();
         }catch (Exception ex){ ex.printStackTrace();}
         MyJsonParser parser = new MyJsonParser();
-        if(!response.equals("null"))
+        if(response!=null)
         {
         priceInfo=parser.parsePriceOwerview(response);
 
@@ -69,7 +69,6 @@ public class SkinPriceService {
             skinPriceRepository.save(skinPrice);
 
             return skinPrice;
-
         }
         else {
             SkinPrice skinPrice = new SkinPrice();

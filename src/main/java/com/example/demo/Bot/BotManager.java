@@ -51,24 +51,23 @@ public class BotManager {
 
     public void initializeBot () {
         BotDetails botDetails = botDetailsRepositorydr.findBotDetailsBySteamLogin(botLogin); // ищем в бд нужного бота;
-        this.bd=botDetails;//
+        this.bd=botDetails;
 
         this.botInfo = new BotInfo(
+                botDetails.getId(),
                 botDetails.getSteamLogin(),
                 botDetails.getPassword(),
-                botDetails.getTradeID(),
-                botDetails.getTradeToken(),
                 botDetails.getSharedSecret(),
                 botDetails.getIdentitySecret(),
                 botDetails.getDeviceID(),
-                botDetails.getCookies());
+                botDetails.getCookies(),
+                botDetails.getApiKey());
 
         if (botInfo.cookies.equals("")) // если это первый запуск и авторизации еще не было
         {
             BotLogin botLogin = new BotLogin(botInfo);
             botLogin.prepareLogin();
             botDetails.setCookies(botLogin.getCookies());
-           // botDetails.setTransferParameters(botLogin.getTransferParameters().toString());
             botDetailsRepositorydr.save(botDetails);
         }
        else //если куки есть, т.е. авторизация была

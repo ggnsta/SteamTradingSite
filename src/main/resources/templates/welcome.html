@@ -1,38 +1,51 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
-<head lang="en">
-    <meta charset="UTF-8"/>
-    <title>DBI Trades</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
-    <link href="/css/welcome.css" rel="stylesheet">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>Untitled333</title>
+    <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Bitter:400,700">
+    <link rel="stylesheet" href="/css/Header-Dark.css">
+    <link rel="stylesheet" href="/css/item.css">
+    <link rel="stylesheet" href="/css/styles.css">
+    <link href="/css/header.css" rel="stylesheet">
 </head>
 
-<nav class="navbar navbar-default">
-    <div class="container-fluid">
-        <div class="navbar-header">
-            <a class="navbar-brand" href="#">DBI Trades</a>
-        </div>
-        <ul class="nav navbar-nav">
-            <li><a href="/welcome">Home</a></li>
-            <li><a href="/test">Current Trades</a></li>
-            <li><a href="/Trades">My Trades</a></li>
-            <li><a href="/inventory">Inventory</a></li>
-            <li><a href="/profile-info">Profile</a></li>
+<header>
+
+    <div class="headerName"><img src="/pics/steamLogo.svg"><p>Bsuir Trade Bot</p></div>
+
+    <div class="menu">
+        <ul class="navigation">
+            <li><a href="sell">Магазин</a></li>
+            <li><a href="#">Продажа</a></li>
+            <li><a href="#">Как это работает</a></li>
+            <li><div class="balance">
+                <div><p>Баланс<div id="balance">$ 0</div></p></div>
+                <button type="button">+</button>
+            </div>
+
+            <li><img  th:src="${mediumImgURL}"></li>
         </ul>
     </div>
-</nav>
-<div class="overlay">
 
-
-</div>
 </header>
 <body>
-<div className="body">
-    <p th:text="'Привет,'+${username}+'!'">
+<div class="sell-block">
+    <h2 class="display-4 block-title">Как это работает</h2>
+    <div class="block-content wrap">
+        <div class="inner">
+            <div class="blocks">
+                <div class="block">
+                    <div class="text"></div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 </body>
+
 </html>
