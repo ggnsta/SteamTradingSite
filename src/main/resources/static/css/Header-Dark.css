@@ -189,6 +189,7 @@ input {
   border-radius: 5px;
   color: #fff;
   transition: border .5s;
+  margin-left: -530px;
 }
 
 .search {
@@ -206,7 +207,8 @@ input {
 .price.container {
   position: relative;
   width: 49%;
-  margin-left: 5px;
+
+  margin-top: -35px;
 }
 
 p {

@@ -14,18 +14,19 @@
 
 <header>
 
-	<div class="headerName"><img src="/pics/steamLogo.svg"><p>Bsuir Trade Bot</p></div>
+	<div class="headerName"><img src="/pics/steamLogo.svg"><p>Fast Trade Bot</p></div>
 
 	<div class="menu">
 		<ul class="navigation">
-			<li><a href="#">Магазин</a></li>
-			<li><a href="#">Продажа</a></li>
+			<li><a href="purchase">Купить преметы</a></li>
+			<li><a href="selling">Продать предметы</a></li>
+			<li><a href="welcome">Как это работает</a></li>
 			<li><div class="balance">
 				<div><p>Баланс<div id="balance">$ 0</div></p></div>
 				<button type="button">+</button>
 			</div>
 
-			<li><img  th:src="${mediumImgURL}"></li>
+			<li><a href="profile-info"><img  th:src="${user.mediumAvatarUrl}"></a></li>
 		</ul>
 	</div>
 
@@ -46,7 +47,7 @@
 						<div class="skin" th:each="skin : ${skinsList}">
 							<label class="skin-wrapper">
 								<input type="checkbox" name="skinid"  th:value="${skin.id}" class="checkbox-input">
-								<span class="skin-tile">ЦЕНА<img class="skin-icon"  th:src="@{{image}(image=${skin.iconUrl})}"></img>
+								<span class="skin-tile"><span th:text="${skin.skinPrice.purchasePrice}+${skin.skinPrice.currency}"></span><img class="skin-icon"  th:src="@{{image}(image=${skin.iconUrl})}">
 								<span class="skin-label" th:text="${skin.marketHashName}">></span>
 								</span>
 							</label>
@@ -59,7 +60,7 @@
 				<div class="block">
 					<div class="right-block">
 						<div class="price container">
-							<p class="cash_offer_price">0.00$</p>
+							<p class="cash_offer_price">Итого: 0.00$</p>
 						</div>
 						<div id="button-block"><button class="btn btn-primary" id="tradeBtn" type="button" onclick="sendSelectedItems()">продать</button></div>
 					</div>
@@ -69,13 +70,20 @@
 	</div>
 </div>
 
+
 <script>
 	function sendSelectedItems() {
 		var json = JSON.stringify(getCheckedCheckBoxes());
 		var xhr = new XMLHttpRequest();
-		xhr.open("POST", '/sell/add', true)
+		xhr.open("POST", '/selling/trade', true)
 		xhr.setRequestHeader('Content-type', 'application/json; charset=utf-8');
 		xhr.send(json)
+
+		xhr.onreadystatechange = function() {
+			if (xhr.readyState == XMLHttpRequest.DONE) {
+				alert("Предложение обмена отправлено, код безопасности:"+xhr.responseText);
+			}
+		}
 
 	}
 </script>

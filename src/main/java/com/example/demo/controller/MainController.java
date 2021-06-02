@@ -1,11 +1,10 @@
 package com.example.demo.controller;
 
+import com.example.demo.models.entity.BotDetails;
 import com.example.demo.models.entity.Skins;
+import com.example.demo.models.entity.TradeOffer;
 import com.example.demo.models.entity.UserProfile;
-import com.example.demo.models.repository.SkinPriceRepository;
-import com.example.demo.models.repository.SkinsRepository;
-import com.example.demo.models.repository.TradeOfferRepository;
-import com.example.demo.models.repository.UserProfileRepository;
+import com.example.demo.models.repository.*;
 import com.example.demo.service.InventoryService;
 import com.example.demo.service.SkinPriceService;
 import com.example.demo.service.TradeService;
@@ -45,6 +44,8 @@ public class MainController {
     private TradeOfferRepository tradeOfferRepository;
     @Autowired
     private SkinsRepository skinsRepository;
+    @Autowired
+    private BotDetailsRepository botDetailsRepository;
 
     private UserProfile user;
 
@@ -79,7 +80,7 @@ public class MainController {
     }
 
     @RequestMapping("/welcome")
-    public String profile(Model model) {
+    public String welcome(Model model) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if ((!(authentication  instanceof AnonymousAuthenticationToken)) && authentication  != null) {
             UserDetails userDetail = (UserDetails) authentication .getPrincipal();
@@ -92,7 +93,7 @@ public class MainController {
                 usersService.updateSteamInfo(user);
                 System.out.println(user.getName());
                 this.user=user;
-                model.addAttribute("username", user.getName());
+                model.addAttribute("user",user);
             } else {
                 model.addAttribute("username", "");
             }
@@ -109,7 +110,7 @@ public class MainController {
         Optional<UserProfile> usersOptional = userRepository.findById(openIdUrl);
         UserProfile user;
         user=usersOptional.orElse(usersOptional.get());
-        usersService.setTradeTokenAndParnerID(tradeUrlArea, user);
+        usersService.setTradeTokenAndPartnerID(tradeUrlArea, user);
         return "redirect:/profile-info";
     }
     @RequestMapping("/profile-info")
@@ -122,19 +123,15 @@ public class MainController {
         UserProfile user;
         user=usersOptional.orElse(usersOptional.get());
 
-        model.addAttribute("steamNickname", user.getName());
-        model.addAttribute("joinDateTime", user.getJoinDateTime());
-       // model.addAttribute("countOfTrades", user.getCountOftrades());
-        model.addAttribute("mediumImgURL", user.getMediumAvatarUrl());
-        model.addAttribute("tradeUrl",user.getTradeUrl());
-        model.addAttribute("smallImgURL",user.getSmallAvatarUrl());
+
+        model.addAttribute("user",user);
+        model.addAttribute("inventoryCost", inventoryService.calculateInventoryCost(user.getSkins()));
 
         return "profile-info";
     }
 
-
-    @RequestMapping("/sell")
-    public String getInventory(Model model)
+    @RequestMapping("/purchase")
+    public String getBotInventory(Model model)
     {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         UserDetails userDetail = (UserDetails) authentication .getPrincipal();
@@ -142,29 +139,75 @@ public class MainController {
         Optional<UserProfile> usersOptional = userRepository.findById(openIdUrl);
         UserProfile user;
         user=usersOptional.orElse(usersOptional.get());
-        long m = System.currentTimeMillis();
-        inventoryService.updateUserSkinsDatabase(user);
-        System.out.println((double) (System.currentTimeMillis() - m));
 
-        List <Skins> skinsList;
-        skinsList=user.getSkins();
-        model.addAttribute("skinsList", skinsList);
-        return "sell";
+        List<BotDetails> bots =botDetailsRepository.findAll();
+        UserProfile botUserProfile;
+        List <Skins> botsSkinsList=new ArrayList<>();
+        for (int i=0;i<bots.size();i++)
+        {
+           botUserProfile= bots.get(i).getUserProfile();
+           inventoryService.updateUserSkinsDatabase(botUserProfile);
+           botsSkinsList.addAll(botUserProfile.getSkins());
+        }
+
+
+        model.addAttribute("skinsList", botsSkinsList);
+        model.addAttribute("user",user);
+        return "purchase";
     }
 
-    @PostMapping("/sell/add")
-    public String getSkinsListToTrade(@RequestBody List<String> selectedSkinId)  {
+    @PostMapping("/purchase/trade")
+    @ResponseBody
+    public String getBotSkinsListToTrade(@RequestBody List<String> selectedSkinId)  {
         List<Skins> skinsToTrade= new ArrayList<Skins>();
         for (int i =0; i<selectedSkinId.size();i++)
         {
             Optional<Skins> skinsOptional =skinsRepository.findById(selectedSkinId.get(i));
             skinsToTrade.add(skinsOptional.orElse(skinsOptional.get()));
         }
-
         tradeService.startTradeService();
-        tradeService.sendTradeOffer(new ArrayList<Skins>(),skinsToTrade,user);
+        String tradeOfferID = tradeService.sendTradeOffer(skinsToTrade,new ArrayList<Skins>(),user);
 
-        return "redirect:/profile-info";
+        Optional<TradeOffer> tradeOfferOptional=tradeOfferRepository.findById(tradeOfferID);
+        TradeOffer tradeOffer = tradeOfferOptional.orElse(tradeOfferOptional.get());
+        return tradeOffer.getMessage();
+    }
+
+    @RequestMapping("/selling")
+    public String getUserInventory(Model model)
+    {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        UserDetails userDetail = (UserDetails) authentication .getPrincipal();
+        String openIdUrl = ((UserProfile) authentication .getPrincipal()).getId();
+        Optional<UserProfile> usersOptional = userRepository.findById(openIdUrl);
+        UserProfile user;
+        user=usersOptional.orElse(usersOptional.get());
+
+        inventoryService.updateUserSkinsDatabase(user);
+
+
+        List <Skins> skinsList;
+        skinsList=user.getSkins();
+        model.addAttribute("skinsList", skinsList);
+        model.addAttribute("user",user);
+        return "selling";
+    }
+
+    @PostMapping("/selling/trade")
+    @ResponseBody
+    public String getUserSkinsListToTrade(@RequestBody List<String> selectedSkinId)  {
+        List<Skins> skinsToTrade= new ArrayList<Skins>();
+        for (int i =0; i<selectedSkinId.size();i++)
+        {
+            Optional<Skins> skinsOptional =skinsRepository.findById(selectedSkinId.get(i));
+            skinsToTrade.add(skinsOptional.orElse(skinsOptional.get()));
+        }
+        tradeService.startTradeService();
+        String tradeOfferID = tradeService.sendTradeOffer(new ArrayList<Skins>(),skinsToTrade,user);
+
+        Optional<TradeOffer> tradeOfferOptional=tradeOfferRepository.findById(tradeOfferID);
+        TradeOffer tradeOffer = tradeOfferOptional.orElse(tradeOfferOptional.get());
+        return tradeOffer.getMessage();
     }
 
 }

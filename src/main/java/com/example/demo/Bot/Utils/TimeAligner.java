@@ -4,8 +4,6 @@ import com.example.demo.utls.EndPoints;
 import com.example.demo.utls.HTTPClientGame;
 import com.example.demo.utls.MyJsonParser;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-
 import java.io.IOException;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -17,13 +15,6 @@ public class TimeAligner {
     private static boolean aligned = false;
     private static Long timeDifference = 0L;
 
-    /**
-     * Gets steam server time.
-     * @param client
-     * @return Epoch/Unix timestamp
-     * @throws IOException
-     * @throws InterruptedException
-     */
     public static long getSteamTime(HttpClient client) throws IOException, InterruptedException {
         if (!TimeAligner.aligned) {
             TimeAligner.alignTime(client);
@@ -31,7 +22,6 @@ public class TimeAligner {
         return TimeStampHandler.getCurrentTimeStamp() + timeDifference;
     }
 
-    //вот тут все причесать
     private static void alignTime(HttpClient client) throws IOException, InterruptedException {
         long currentTime = TimeStampHandler.getCurrentTimeStamp();
 

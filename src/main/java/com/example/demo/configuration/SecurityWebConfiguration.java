@@ -32,7 +32,7 @@ public class SecurityWebConfiguration extends WebSecurityConfigurerAdapter {
         http
                 .authorizeRequests()
                 .antMatchers("/").permitAll()
-                .antMatchers("/js/**", "/img/**", "/fonts/**","/css/**", "/bower_components/**").permitAll()
+                .antMatchers("/js/**", "/pics/**", "/fonts/**","/css/**", "/bower_components/**").permitAll()
                 .antMatchers("/login/**").permitAll()
                 .antMatchers("/resources/**", "/webjars/**", "/built/**", "/static/**").permitAll()
                 .antMatchers("/h2-console/**").permitAll()

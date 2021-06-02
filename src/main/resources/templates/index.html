@@ -1,42 +1,87 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<head lang="en">
-    <meta charset="UTF-8"/>
-    <title>DBI Trades</title>
-    <link href="/css/app.css" rel="stylesheet">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>Untitled333</title>
+    <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Bitter:400,700">
+
+    <link rel="stylesheet" href="/css/item.css">
+    <link rel="stylesheet" href="/css/styles.css">
+    <link href="/css/header.css" rel="stylesheet">
 </head>
-<div id="header">
-    <div id="logo">
-        DBI Trades
-    </div>
-    <div id="header-right">
-        <nav sec:authorize="isAnonymous()">
-            <ul class="member-actions">
+
+<header>
+
+    <div class="headerName"><img src="/pics/steamLogo.svg"><p>Fast Trade Bot</p></div>
+
+    <div class="menu">
+        <ul class="navigation">
+            <li><a href="#">Купить предметы</a></li>
+            <li><a href="#">Продать предметы</a></li>
+            <li><a href="#">Как это работает</a></li>
+            <li style="margin-top:-7px"><div class="openID">
                 <form name="form" th:action="@{/login/openid}" method="post">
 
                     <div id="openid_input_area">
                         <input id="openid_identifier" name="openid_identifier" type="hidden"
                                value="http://steamcommunity.com/openid"/>
-                        <input id="openid_submit" type="image"  width="143" height="54" th:src="@{https://steamcommunity-a.akamaihd.net/public/shared/images/signinthroughsteam/sits_landing.png}"/>
+                        <input id="openid_submit" type="image"   th:src="@{https://community.cloudflare.steamstatic.com/public/shared/images/signinthroughsteam/sits_landing.png}"/>
                     </div>
 
                 </form>
-            </ul>
-        </nav>
+
+            </div>
+
+
+        </ul>
     </div>
-</div>
-<div id="subheader">
-    <div id="tagline">
-        The ultimate CS:GO item trading site
-    </div>
-    <div id="subheader-right">
-    </div>
-</div>
+
+</header>
 <body>
-<div className="body">
-    <p>Coming soon...</p>
+<div class="sell-block">
+    <h2 class="display-4 block-title">ВХОД</h2>
+    <div class="block-content wrap">
+        <div class="inner">
+            <div class="blocks">
+                <div class="block">
+                    <div class="textHowItWork" style="color: #FFFFFF" >
+
+                        <p align="justify">
+                            <font color="#fe6f02">fast-trade.ru</font> — это сайт, на котором можно мгновенно продать и купить скины CS:GO.
+                            Итак, просим ознакомиться ниже с инструкцией, как продать вещи CS:GO быстро и надёжно.<br>
+
+                            Чтобы продать интересующий тебя скин сайту, нужно:<br>
+
+                            <font color="#fe6f02">1. Войти через Steam.</font><br>
+                            Чтобы продать скины и получить деньги, необходимо войти на сайт, используя свой аккаунт Steam.<br>
+
+
+                            <br>
+                            <img src="/pics/auth.png" style="width: 300px;border: 1px solid rgba(204, 204, 204, 0.43);">
+                            <br>
+                            <br>
+
+                            <font color="#fe6f02">2. Выбрать скины для продажи.</font><br>
+                            Выбрать из своего Steam-инвентаря скины, которые ты хочешь продать .<br>
+                            Получить предложения обмена от нашего бота.<br>
+                            Принять обмен в Steam.<br>
+                            <br>
+                            <img src="/pics/example.png" style="width: 500px; border: 1px solid rgba(204, 204, 204, 0.43);"><br>
+                        </p>
+
+
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 </body>
+
 </html>

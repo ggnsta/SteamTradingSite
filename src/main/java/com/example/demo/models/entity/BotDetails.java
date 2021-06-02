@@ -1,14 +1,12 @@
 package com.example.demo.models.entity;
 
-import com.google.gson.JsonObject;
-import org.hibernate.annotations.GenericGenerator;
-
 import javax.persistence.*;
 import java.util.List;
 
 @Entity
 public class BotDetails {
     @Id
+
     private String id;
     private String steamLogin;
     private String SharedSecret;
@@ -19,6 +17,17 @@ public class BotDetails {
     private String apiKey;
     @OneToMany(mappedBy = "botLogin", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<TradeOffer> tradeOffers;
+    @OneToOne(fetch = FetchType.EAGER)
+    @MapsId
+    private UserProfile userProfile;
+
+    public UserProfile getUserProfile() {
+        return userProfile;
+    }
+
+    public void setUserProfile(UserProfile userProfile) {
+        this.userProfile = userProfile;
+    }
 
     public List<TradeOffer> getTradeOffers() {
         return tradeOffers;

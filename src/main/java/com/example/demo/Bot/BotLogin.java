@@ -1,35 +1,19 @@
 package com.example.demo.Bot;
-
-
 import com.example.demo.Bot.Utils.RSAEncrypt;
-import com.example.demo.Bot.Utils.TimeAligner;
-import com.example.demo.models.entity.BotDetails;
-import com.example.demo.models.repository.BotDetailsRepository;
 import com.google.gson.*;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.http.impl.client.HttpClientBuilder;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.stereotype.Service;
-
-
 import javax.net.ssl.SSLSocket;
 import javax.net.ssl.SSLSocketFactory;
 import java.io.*;
-import java.math.BigInteger;
 import java.net.URLEncoder;
 import java.net.http.HttpClient;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
-import java.util.Random;
-
-
 
 public class BotLogin {
     private JsonParser parser;
     private BotInfo botInfo;
     private String cookies;
-    private JsonObject transferParameters;
+
 
     public BotLogin(BotInfo botInfo) {
         this.botInfo = botInfo;
@@ -155,15 +139,12 @@ public class BotLogin {
 
     private void setCookiesAndTransferParam (JsonObject transferParam, HashMap<String, String> cookies)  {
         try {
-          //  cookies.put("steamid", transferParam.getAsJsonObject("transfer_parameters").get("steamid").getAsString());
             String cookieString = cookies.toString();
             cookieString = cookieString.substring(1,cookieString.length()-1);
             cookieString=cookieString.replaceAll(",",";");
             cookieString = java.net.URLDecoder.decode(cookieString , StandardCharsets.UTF_8.name());
             this.cookies=cookieString;
 
-        //    this.cookies = new Gson().fromJson(cookies.toString(), JsonObject.class);
-         //   this.transferParameters = transferParam.getAsJsonObject("transfer_parameters");
         }catch (Exception ex){
             ex.printStackTrace();
         }
@@ -173,9 +154,6 @@ public class BotLogin {
         return cookies;
     }
 
-    public JsonObject getTransferParameters() {
-        return transferParameters;
-    }
 
 
 }

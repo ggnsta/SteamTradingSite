@@ -7,7 +7,7 @@
     <title>Untitled333</title>
     <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Bitter:400,700">
-    <link rel="stylesheet" href="/css/Header-Dark.css">
+
     <link rel="stylesheet" href="/css/item.css">
     <link rel="stylesheet" href="/css/styles.css">
     <link href="/css/header.css" rel="stylesheet">
@@ -15,23 +15,24 @@
 
 <header>
 
-    <div class="headerName"><img src="/pics/steamLogo.svg"><p>Bsuir Trade Bot</p></div>
+    <div class="headerName"><img src="/pics/steamLogo.svg"><p>Fast Trade Bot</p></div>
 
     <div class="menu">
         <ul class="navigation">
-            <li><a href="sell">Магазин</a></li>
-            <li><a href="#">Продажа</a></li>
-            <li><a href="#">Как это работает</a></li>
+            <li><a href="purchase">Купить преметы</a></li>
+            <li><a href="selling">Продать предметы</a></li>
+            <li><a href="welcome">Как это работает</a></li>
             <li><div class="balance">
                 <div><p>Баланс<div id="balance">$ 0</div></p></div>
                 <button type="button">+</button>
             </div>
 
-            <li><img  th:src="${mediumImgURL}"></li>
+            <li><a href="profile-info"><img  th:src="${user.mediumAvatarUrl}"></a></li>
         </ul>
     </div>
 
 </header>
+
 <body>
 <div class="sell-block">
     <h2 class="display-4 block-title">Как это работает</h2>
@@ -39,7 +40,33 @@
         <div class="inner">
             <div class="blocks">
                 <div class="block">
-                    <div class="text"></div>
+                    <div class="textHowItWork" style="color: #FFFFFF" >
+
+                        <p align="justify">
+                            <font color="#fe6f02">fast-trade.ru</font> — это сайт, на котором можно мгновенно продать и купить скины CS:GO.
+                            Итак, просим ознакомиться ниже с инструкцией, как продать вещи CS:GO быстро и надёжно.<br>
+
+                            Чтобы продать интересующий тебя скин сайту, нужно:<br>
+
+                            <font color="#fe6f02">1. Войти через Steam.</font><br>
+                            Чтобы продать скины и получить деньги, необходимо войти на сайт, используя свой аккаунт Steam.<br>
+
+
+
+                            <img src="/pics/auth.png" style="width: 300px;border: 1px solid rgba(204, 204, 204, 0.43);"><br>
+
+                            <font color="#fe6f02">2. Выбрать скины для продажи.</font><br>
+                            3. Выбрать из своего Steam-инвентаря скины, которые ты хочешь продать .<br>
+                            4. Получить предложения обмена от нашего бота.<br>
+                            5. Принять обмен.<br>
+
+                            <img src="/pics/example.png" style="width: 500px; border: 1px solid rgba(204, 204, 204, 0.43);"><br>
+                        </p>
+
+
+
+
+                    </div>
                 </div>
             </div>
         </div>

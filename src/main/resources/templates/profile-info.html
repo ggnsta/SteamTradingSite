@@ -10,8 +10,26 @@
     <title>Trade Bot</title>
 </head>
 <body>
-<div th:insert="fragments/header.html :: header"></div>
 
+<header>
+
+    <div class="headerName"><img src="/pics/steamLogo.svg"><p>Fast Trade Bot</p></div>
+
+    <div class="menu">
+        <ul class="navigation">
+            <li><a href="purchase">Купить преметы</a></li>
+            <li><a href="selling">Продать предметы</a></li>
+            <li><a href="welcome">Как это работает</a></li>
+            <li><div class="balance">
+                <div><p>Баланс<div id="balance">$ 0</div></p></div>
+                <button type="button">+</button>
+            </div>
+
+            <li><a href="profile-info"><img  th:src="${user.mediumAvatarUrl}"></a></li>
+        </ul>
+    </div>
+
+</header>
 
 <section class="mainPage">
     <div class="center">
@@ -20,13 +38,14 @@
             <h2>Профиль</h2>
             <ul>
                 <li><div class="imgName">
-                    <img th:src="${mediumImgURL}" width="64px" height="64px">
-                    <p th:text = "${steamNickname}"/>
+                    <img th:src="${user.mediumAvatarUrl}" width="64px" height="64px">
+                    <p th:text = "${user.name}"/>
                 </div></li>
                 <i></i>
-                <li>Регистрация: <text th:text = "${joinDateTime}"/></li>
+                <li>Регистрация: <text th:text = "${user.joinDateTime}"/></li>
                 <i></i>
-                <li>Обменов:<text th:text = "${countOfTrades}"/></li>
+                <li>Обменов:<text th:text = "${user.countOfTrades}"/></li>
+                <li>Стоимость инвенторя:<text th:text = " ${inventoryCost}" />$</li>
             </ul>
         </div>
         <div class="info">
@@ -34,7 +53,7 @@
             <div class="tradeLink">
                 <p>Trade link:</p>
                 <form action="/profile-info/setTradeUrl" method="post">
-                    <input type="text"  name="tradeUrlArea" style="outline: none;" id="textLink" th:value="${tradeUrl}">
+                    <input type="text"  name="tradeUrlArea" style="outline: none;" id="textLink" th:value="${user.tradeUrl}">
                     <button class="resetBtn" type="reset">X</button>
                     <button type="submit"  class="btn btn-success"> Применить</button>
                 </form>

@@ -2,11 +2,11 @@ package com.example.demo.Bot.Utils;
 
 public class Confirmation {
 
-    private String  ID;//The ID of this confirmation
-    private String Key;//The unique key used to act upon this confirmation.
-    private String IntType;// The value of the data-type HTML attribute returned for this contribution.
-    private String Creator;// Represents either the Trade Offer ID or market transaction ID that caused this confirmation to be created.
-    private ConfirmationType ConfType;// The type of this confirmation.
+    private String  ID;
+    private String Key;
+    private String IntType;
+    private String Creator;
+    private ConfirmationType ConfType;
 
     public Confirmation(String id, String key, String type, String creator) {
         this.ID = id;
@@ -14,7 +14,6 @@ public class Confirmation {
         this.IntType = type;
         this.Creator = creator;
 
-        //Do a switch simply because we're not 100% certain of all the possible types.
         switch (Integer.parseInt(type)) {
             case 1:
                 this.ConfType = ConfirmationType.GenericConfirmation;

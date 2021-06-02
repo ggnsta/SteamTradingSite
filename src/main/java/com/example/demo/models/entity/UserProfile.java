@@ -1,15 +1,12 @@
 package com.example.demo.models.entity;
-
-
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
-import java.util.Set;
+
 
 @Entity
 public class UserProfile implements UserDetails  {
@@ -30,7 +27,13 @@ public class UserProfile implements UserDetails  {
     @OneToMany(mappedBy = "userProfileID", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<TradeOffer> tradeOffers;
 
+    public int getCountOfTrades() {
+        return countOfTrades;
+    }
 
+    public void setCountOfTrades(int countOfTrades) {
+        this.countOfTrades = countOfTrades;
+    }
 
     public List<TradeOffer> getTradeOffers() {
         return tradeOffers;

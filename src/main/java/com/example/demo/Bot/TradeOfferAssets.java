@@ -1,14 +1,8 @@
 package com.example.demo.Bot;
 
 import com.example.demo.models.entity.Skins;
-import com.google.gson.Gson;
 import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.google.gson.annotations.SerializedName;
-
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 public class TradeOfferAssets {

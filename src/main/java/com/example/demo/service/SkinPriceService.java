@@ -5,16 +5,11 @@ import com.example.demo.models.entity.SkinPrice;
 import com.example.demo.models.repository.SkinPriceRepository;
 import com.example.demo.utls.HTTPClientGame;
 import com.example.demo.utls.MyJsonParser;
-
-import org.apache.http.HttpHost;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.conn.params.ConnRoutePNames;
-import org.apache.http.impl.client.DefaultHttpClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 
@@ -28,23 +23,6 @@ public class SkinPriceService {
     private SkinPriceRepository skinPriceRepository;
     private static final  String marketURL = "https://steamcommunity.com/market/priceoverview/?appid=%appId&currency=%currency&market_hash_name=%marketHashName";
 
-    public SkinPrice fake ()
-    {
-        SkinPrice sp = new SkinPrice();
-        skinPriceRepository.save(sp);
-        return sp;
-    }
-
-    public void test2()
-    {
-        for(int i = 0; i<150;i++)
-        {
-            HTTPClientGame  httpClientGame = new HTTPClientGame("https://steamcommunity.com/market/listings/730/Snakebite%20Case");
-            String response = httpClientGame.getAll();
-            System.out.println(i);
-        }
-
-    }
 
     public SkinPrice requestOneSkinPrice (int currency, String marketHashName)
     {
@@ -65,6 +43,16 @@ public class SkinPriceService {
             skinPrice.setMarketHashName(marketHashName);
             skinPrice.setLowestPrice(Double.parseDouble(priceInfo.get(0).substring(1)));
             skinPrice.setMedianPrice(Double.parseDouble(priceInfo.get(0).substring(1)));
+
+            BigDecimal result = new BigDecimal(skinPrice.getLowestPrice()*0.7);
+            result=result.setScale(3, RoundingMode.DOWN);
+            skinPrice.setPurchasePrice(result.doubleValue());
+
+            result = new BigDecimal(skinPrice.getLowestPrice()*0.8);
+            result=result.setScale(3, RoundingMode.DOWN);
+
+
+            skinPrice.setSellingPrice(result.doubleValue());
             skinPrice.setCurrency(priceInfo.get(0).substring(0,1));
             skinPriceRepository.save(skinPrice);
 

@@ -1,7 +1,5 @@
 package com.example.demo.models.entity;
-
 import org.hibernate.annotations.GenericGenerator;
-
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Objects;
@@ -23,7 +21,7 @@ public class Skins implements Serializable {
     @ManyToOne(fetch = FetchType.LAZY)
     private UserProfile userProfile; //id
     @ManyToOne(targetEntity = SkinPrice.class,cascade = CascadeType.ALL)
-    @JoinColumn (name="fk_marketHashName",referencedColumnName = "market_hash_name",insertable = false, updatable = false, nullable = true)
+    @JoinColumn (name="marketHashName",referencedColumnName = "market_hash_name",insertable = false, updatable = false, nullable = true)
     private SkinPrice skinPrice;
 
     public SkinPrice getSkinPrice() {

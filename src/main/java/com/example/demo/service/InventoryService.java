@@ -8,7 +8,6 @@ import com.example.demo.utls.HTTPClientGame;
 import com.google.gson.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -70,35 +69,32 @@ public class InventoryService {
             userSkin.setIconUrl(skinDesctiptionJson.get(k).getAsJsonObject().get("icon_url").getAsString());
             userSkin.setMarketHashName(skinDesctiptionJson.get(k).getAsJsonObject().get("market_hash_name").getAsString());
             userSkin.setTradable(skinDesctiptionJson.get(k).getAsJsonObject().get("tradable").getAsInt());
-            if(userSkin.getTradable()==0)continue;// если предмететом нельзя обмениваться, в бд он не вносится
+            if(userSkin.getTradable()==0)continue;
             userSkin.setMarketable(skinDesctiptionJson.get(k).getAsJsonObject().get("marketable").getAsInt());
             userSkin.setQuality(defineSkinQuality(userSkin.getMarketHashName()));
             userSkin.setUserProfile(user);
 
-
             Optional<SkinPrice>  skinPriceOptional = skinPriceRepository.findById(userSkin.getMarketHashName());
             SkinPrice skinPrice = skinPriceOptional.orElse(skinPriceOptional.get());
-
             userSkin.setSkinPrice(skinPrice);
             skinPrice.addSkins(userSkin);
             skinsToDB.add(userSkin);
-            //skinsRepository.save(userSkin);
+
 
         }
         return skinsToDB;
     }
 
-    //to-do цены обновляются только на скины которые перезаписались в дб, сделать обновление цен для старых скинов
     public void updateUserSkinsDatabase(UserProfile user)
     {
-        List<Skins> existSkins = getUserSkins(user); // скины, которые уже в бд
+        List<Skins> existSkins = getUserSkins(user);
         List<Skins> actualSkins= parseJsonToSkins(user);
 
         if(!existSkins.containsAll(actualSkins) || !actualSkins.containsAll(existSkins))
         {
-            List<Skins> skinsToDeleteFromDB = existSkins; // скины которые надо удалить из дб
-            skinsToDeleteFromDB.removeAll(actualSkins);// из этого массива удаляем совпадения с актуальынми скинами, остаются только те которых уже нет в стиме
-            skinsRepository.deleteAll(skinsToDeleteFromDB);// удаляем несуществующие скины из нашей бд
+            List<Skins> skinsToDeleteFromDB = existSkins;
+            skinsToDeleteFromDB.removeAll(actualSkins);
+            skinsRepository.deleteAll(skinsToDeleteFromDB);
             existSkins=getUserSkins(user);
             for(Skins skin : actualSkins)
             {
@@ -153,7 +149,8 @@ public class InventoryService {
             if (userSkins.get(i).getSkinPrice()!=null)
             cost+= userSkins.get(i).getSkinPrice().getLowestPrice();
         }
-        return  String.valueOf(cost);
+
+        return  String.format("%.2f",cost);
     }
 
 }

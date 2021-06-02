@@ -1,11 +1,5 @@
 package com.example.demo.Bot;
 
-import com.example.demo.models.entity.BotDetails;
-import com.example.demo.models.repository.BotDetailsRepository;
-import com.google.gson.JsonObject;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 
 public class BotInfo {
     public  String steamID;

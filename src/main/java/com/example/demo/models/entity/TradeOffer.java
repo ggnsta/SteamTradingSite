@@ -4,7 +4,6 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
-import java.sql.Timestamp;
 import java.time.LocalTime;
 
 @Entity

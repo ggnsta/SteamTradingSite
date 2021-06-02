@@ -1,5 +1,6 @@
 package com.example.demo.Bot;
 
+import com.example.demo.Bot.Utils.Confirmation;
 import com.example.demo.models.entity.BotDetails;
 import com.example.demo.models.entity.Skins;
 import com.example.demo.models.entity.TradeOffer;
@@ -11,7 +12,6 @@ import com.example.demo.utls.EndPoints;
 import com.example.demo.utls.HTTPClientGame;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonPrimitive;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
@@ -44,7 +44,6 @@ public class BotManager {
     @Autowired TradeOfferRepository tradeOfferRepository;
     private BotInfo botInfo;
     public static final String TimeOffset = "10800"; // belarus gmt+3 = 3600s * 3
-    private final String sendUrl = "https://steamcommunity.com/tradeoffer/new/send";
     private BotDetails bd=new BotDetails();//
     private  String sessionID;
     private String botLogin="qiqitrade";
@@ -63,14 +62,14 @@ public class BotManager {
                 botDetails.getCookies(),
                 botDetails.getApiKey());
 
-        if (botInfo.cookies.equals("")) // если это первый запуск и авторизации еще не было
+        if (botInfo.cookies.equals(""))
         {
             BotLogin botLogin = new BotLogin(botInfo);
             botLogin.prepareLogin();
             botDetails.setCookies(botLogin.getCookies());
             botDetailsRepositorydr.save(botDetails);
         }
-       else //если куки есть, т.е. авторизация была
+       else
         {
             addCommonCookies();
         }
@@ -81,7 +80,7 @@ public class BotManager {
         return new BigInteger(96, new Random()).toString(16);
     }
 
-    private static String generateTradeOfferMessage()
+    public static String generateTradeOfferMessage()
     {
         String tradeCode = RandomStringUtils.randomAlphanumeric(6).toUpperCase();
         return  tradeCode;
@@ -105,18 +104,28 @@ public class BotManager {
         else return -1;
     }
 
-    public void sendTradeOffer(List<Skins> botSkins, List <Skins> userSkins, UserProfile user){
+    public String sendTradeOffer(List<Skins> botSkins, List <Skins> userSkins, UserProfile user){
         String securityTradeCode = generateTradeOfferMessage();
         String tradeOfferId = tradeOfferRequest(botSkins,userSkins,user,securityTradeCode);
-        if(tradeOfferId!=null)
+        if(tradeOfferId!=null && botSkins.isEmpty())
         {
-            SteamGuardAccount steamGuardAccount = new SteamGuardAccount(HttpClient.newBuilder().build(),botInfo);
-            steamGuardAccount.fetchConfirmations();
+
+            System.out.println("oooooooooooooo");
             createTradeOfferEntity(tradeOfferId,botLogin,user.getId(),securityTradeCode);
 
         }
-
+        if(tradeOfferId!=null && userSkins.isEmpty())
+        {
+            SteamGuardAccount steamGuardAccount = new SteamGuardAccount(HttpClient.newBuilder().build(),botInfo);
+            List<Confirmation> confs = steamGuardAccount.fetchConfirmations();
+            if(confs.size()>0)
+            {
+                steamGuardAccount.sendConfirmation(confs.get(0),"1");////
+            }
+        }
+        return tradeOfferId;
     }
+
     private String tradeOfferRequest(List<Skins> botSkins, List <Skins> userSkins, UserProfile user, String tradeOfferMessage)  {
 
         JsonObject tradeParams = new JsonObject();
@@ -185,6 +194,8 @@ public class BotManager {
         }
         return false;
     }
+
+
 
     private void createTradeOfferEntity(String tradeOfferID, String botLogin, String partnerID, String securityTradeCode)
     {

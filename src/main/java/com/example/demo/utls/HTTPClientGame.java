@@ -18,7 +18,6 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicHeader;
 import org.openid4java.server.ServerException;
-import org.springframework.web.reactive.function.client.WebClient;
 
 public class HTTPClientGame {
     private HttpClient client;
@@ -30,10 +29,6 @@ public class HTTPClientGame {
         client = HttpClientBuilder.create().build();
         this.URIl = URL;
     }
-    public HTTPClientGame()
-    {
-
-    }
 
     public HTTPClientGame(String URL, List<Header> headers)
     {
@@ -41,9 +36,6 @@ public class HTTPClientGame {
         this.headers = headers;
     }
 
-
-
-    //EXCEP SLOVIT
     public String getAll(){
         try {
             client = HttpClientBuilder.create().build();
@@ -64,44 +56,20 @@ public class HTTPClientGame {
         }
     }
 
-    public String getAllproxy(){
-        try {
-            client = HttpClientBuilder.create().build();
-            HttpGet get = new HttpGet(URIl);
-            for(int i=0;i<headers.size();i++)
-            {
-                get.addHeader(headers.get(i));
-            }
-
-            HttpResponse response = client.execute(get);
-
-            throwServerException(response, 200);
-            return inputStreamToString(response.getEntity().getContent());
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
-
     private String inputStreamToString(InputStream is) {
 
         String line = "";
         StringBuilder total = new StringBuilder();
 
-        // Wrap a BufferedReader around the InputStream
         BufferedReader rd = new BufferedReader(new InputStreamReader(is));
 
         try {
-            // Read response until the end
             while ((line = rd.readLine()) != null) {
                 total.append(line);
             }
         } catch (IOException e) {
 
         }
-        // Return full string
         return total.toString();
     }
 
@@ -132,11 +100,6 @@ public class HTTPClientGame {
     public enum RequestType {
         GET,
         POST,
-    }
-
-    private void test ()
-    {
-        WebClient client = WebClient.create();
     }
 
     private void throwServerException(HttpResponse response, int goodCode) throws ServerException {

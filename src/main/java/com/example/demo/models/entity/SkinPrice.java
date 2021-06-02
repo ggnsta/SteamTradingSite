@@ -1,5 +1,4 @@
 package com.example.demo.models.entity;
-
 import javax.persistence.*;
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -16,7 +15,9 @@ public class SkinPrice implements Serializable {
     private Double medianPrice;
     private Double lowestPrice;
     private String currency;
-    @OneToMany(targetEntity=Skins.class, mappedBy="skinPrice",cascade=CascadeType.ALL, fetch = FetchType.LAZY)
+    private Double sellingPrice;
+    private Double purchasePrice;
+    @OneToMany(targetEntity=Skins.class, mappedBy="skinPrice",cascade=CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Skins> skins = new ArrayList<>();
 
     public void addSkins(Skins skin){
@@ -27,6 +28,23 @@ public class SkinPrice implements Serializable {
     public void removeSkins(Skins skin){
         skins.remove(skin);
         skin.setSkinPrice(null);
+    }
+
+
+    public Double getSellingPrice() {
+        return sellingPrice;
+    }
+
+    public void setSellingPrice(Double sellingPrice) {
+        this.sellingPrice = sellingPrice;
+    }
+
+    public Double getPurchasePrice() {
+        return purchasePrice;
+    }
+
+    public void setPurchasePrice(Double purchasePrice) {
+        this.purchasePrice = purchasePrice;
     }
 
     public String getMarketHashName() {

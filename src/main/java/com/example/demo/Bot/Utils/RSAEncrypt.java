@@ -19,7 +19,6 @@ public class RSAEncrypt {
         this.publickeyMod = publickeyMod;
     }
 
-    // encrypt the password
     private String encrypt(){
 
         BigInteger mod = new BigInteger(publickeyMod, 16);

@@ -68,6 +68,21 @@ html{
     flex-direction: row;
 
 }
+.openID
+{
+    display: flex;
+    flex-direction: row;
+   padding-top: -55px;
+
+    cursor: pointer;
+}
+.openid_input_area{
+    height: 120px;
+}
+.openid_submit
+{
+    margin-bottom: 20px;
+}
 .balance{
     margin-top: -15px;
     display: flex;
@@ -78,7 +93,7 @@ html{
 }
 .balance button{
     color: #c0c0c2;
-    font-size: 20px;
+    font-size: 18px;
     margin-left: 10px;
     padding: 0 8.70px;
     background-color: #7668cb;
@@ -104,3 +119,4 @@ html{
 .menu a{
     text-decoration: none;
 }
+

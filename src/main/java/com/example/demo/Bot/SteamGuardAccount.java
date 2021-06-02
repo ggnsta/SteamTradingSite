@@ -2,6 +2,7 @@ package com.example.demo.Bot;
 
 import com.example.demo.Bot.Utils.Confirmation;
 import com.example.demo.Bot.Utils.HmacSHA1Handler;
+import com.example.demo.Bot.Utils.RegexHandler;
 import com.example.demo.Bot.Utils.TimeAligner;
 import com.example.demo.utls.EndPoints;
 import com.example.demo.utls.HTTPClientGame;
@@ -20,42 +21,20 @@ import java.util.*;
 public class SteamGuardAccount {
 
 
-    private HttpClient client; // убрать может
+    private HttpClient client;
     private final static byte[] steamGuardCodeTranslations = new byte[] { 50, 51, 52, 53, 54, 55, 56, 57, 66, 67, 68, 70, 71, 72, 74, 75, 77, 78, 80, 81, 82, 84, 86, 87, 88, 89 };
     private BotInfo botInfo;
 
-
-    /**
-     * SteamGuardAccount to get the steamGuard code for login, accept send step of 2 step confirmation.
-     * @param client HttpClient
-     * @param botInfo secrets for 2fa, cookies....
-     */
     public SteamGuardAccount(HttpClient client, BotInfo botInfo) {
         this.client = client;
         this.botInfo = botInfo;
     }
 
-    /**
-     * Generate Steam Guard Code required for login.
-     * @return Steam Guard Code
-     * @throws IOException
-     * @throws InterruptedException
-     * @throws NoSuchAlgorithmException
-     * @throws InvalidKeyException
-     */
     public String generateSteamGuardCode()
             throws IOException, InterruptedException, NoSuchAlgorithmException, InvalidKeyException {
         return generateSteamGuardCodeForTime(TimeAligner.getSteamTime(client));
     }
 
-    /**
-     * Generate Steam Guard Code for a given time.
-     * @param time Epoch Time/Unix Time
-     * @return Steam Guard code
-     * @throws InvalidKeyException
-     * @throws NoSuchAlgorithmException
-     * @throws UnsupportedEncodingException
-     */
     public String generateSteamGuardCodeForTime(long time)
             throws InvalidKeyException, NoSuchAlgorithmException, UnsupportedEncodingException {
         if (this.botInfo.sharedSecret == null || this.botInfo.sharedSecret.length() == 0) {
@@ -118,9 +97,40 @@ public class SteamGuardAccount {
           System.out.println("Confirmation Request Fetched Successfully.");
         }
 
-        return null;
-
+        return FetchConfirmationInternal(response.body());
     }
+
+    public boolean sendConfirmation (Confirmation conf, String op){
+
+     return true;
+    }
+
+
+    private List<Confirmation> FetchConfirmationInternal(String response) {
+
+        List<List<String>> confirmations = RegexHandler.getAllMatches(
+                response,
+                "<div class=\"mobileconf_list_entry\" id=\"conf[0-9]+\" data-confid=\"(\\d+)\" data-key=\"(\\d+)\" data-type=\"(\\d+)\" data-creator=\"(\\d+)\"");
+
+        if (response == null || confirmations.size() == 0) {
+            if (response == null || !response.matches("<div>Nothing to confirm</div>")) {
+            }
+            return new ArrayList<>();
+        }
+
+        List<Confirmation> ret = new ArrayList<>();
+        for (List<String> confirmation : confirmations) {
+            if (confirmation.size() != 5) continue;
+
+            String confID = confirmation.get(1);
+            String confKey = confirmation.get(2);
+            String confType = confirmation.get(3);
+            String confCreator = confirmation.get(4);
+            ret.add(new Confirmation(confID, confKey, confType, confCreator));
+        }
+        return ret;
+    }
+
     private String generateConfirmationURL(String tag)
     {
         String endpoint = EndPoints.COMMUNITY_BASE + "/mobileconf/conf?";

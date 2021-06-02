@@ -1,5 +1,4 @@
 package com.example.demo.service;
-
 import com.example.demo.models.entity.UserProfile;
 import com.example.demo.models.repository.UserProfileRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,7 +7,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.openid.OpenIDAuthenticationToken;
 import org.springframework.stereotype.Service;
-
 import java.util.Optional;
 
 @Service
